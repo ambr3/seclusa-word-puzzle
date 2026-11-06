@@ -90,4 +90,24 @@ describe('word puzzle', () => {
             expect(vowels).toBeLessThanOrEqual(6);
         }
     });
+
+    it('ignores a dictionary check from an earlier round or a path off the board', async () => {
+        const h = await loadHooks();
+        expect(h.pendingStillApplies(1, 1, true, false)).toBeTruthy();
+        expect(h.pendingStillApplies(1, 2, true, false)).toBeFalsy();
+        expect(h.pendingStillApplies(1, 1, false, false)).toBeFalsy();
+        expect(h.pendingStillApplies(1, 1, true, true)).toBeFalsy();
+        expect(h.pathOnGrid([{ row: 0, col: 1 }], [['c', 'a', 't']])).toBeTruthy();
+        expect(h.pathOnGrid([{ row: 3, col: 0 }], [['c', 'a', 't']])).toBeFalsy();
+    });
+
+    it('names a quit differently from a finished clock or challenge', async () => {
+        const h = await loadHooks();
+        expect(h.resultTitle('quit', 'classic', 0)).toBe('Round ended');
+        expect(h.resultTitle('quit', 'challenge', 0)).toBe('Round ended');
+        expect(h.resultTitle('quit', 'zen', 0)).toBe('Round Complete');
+        expect(h.resultTitle('time', 'classic', 0)).toBe('Time\u2019s Up!');
+        expect(h.resultTitle('challenge', 'challenge', 0)).toBe('Challenge Complete');
+        expect(h.resultTitle('quit', 'classic', 1)).toBe('Level Up!');
+    });
 });

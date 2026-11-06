@@ -2,11 +2,19 @@
 
 All notable changes to **Word Puzzle**.
 
-## Unreleased
+## 0.1.1 — 2026-11-06
+
+### Fixed
+- A word submitted while `words.js` is still loading is scored only on the round that submitted it.
+- Quitting Classic, Rush, or Challenge says "Round ended". A score of 0 is not stored. Zen still says "Round Complete".
+- Settings hides Sounds, because this game has none, and lists the accent palettes the theme already applies.
+- The service worker is registered once. `LICENSE` is precached, so the footer link works offline.
+- `_headers` and `.htaccess` are present again. They match the document CSP, with `frame-ancestors 'self'` and `X-Frame-Options: SAMEORIGIN`. GitHub Pages does not send them.
 
 ### Changed
-- **One version for the whole app.** Every `?v=` cache-buster is gone, along with this game's own version literal and the `<meta name="version">` that fed it. The version now lives in exactly two files — the app's `index.html` and `manifest.json` — and this game's service worker names its cache from `manifest.json` at install time, so a version bump retires the cache automatically and there is nothing to keep in step by hand. The app version is shown once, in the launcher's About dialog.
-- The "Open source" link in the menu and on the offline page pointed at `../../oss/word-puzzle/`, a directory that no longer exists — it 404'd on every load. It now points at the author's page, the same one the README already cites.
+- **One version for the whole app.** There is no `?v=` cache-buster. The version lives in `index.html` (`meta name="version"`) and `manifest.json`. The service worker names its cache from the manifest, and About shows that version.
+- The footer source link points at the GitHub repository. The offline page links to the author's page.
+- The high-score button says "Clear scores and progress", which is what it clears.
 
 ### Fixed
 - **The service worker no longer deletes other caches on the origin.** Its activate sweep filtered on `k !== CACHE_NAME`, which matched *every* cache that wasn't its own — measurably, opening this game emptied the Seclusa Games launcher's offline cache from 24 entries to 0. It is now scoped to the `word-puzzle-` prefix.
@@ -15,7 +23,7 @@ All notable changes to **Word Puzzle**.
 - Cache lookups are scoped to this worker's own cache rather than searching every cache on the origin.
 - `X-Frame-Options: SAMEORIGIN` instead of `DENY` (in both `_headers` and `.htaccess`). `DENY` made the game impossible to frame by the Seclusa Games launcher in production while looking fine under a plain file server.
 - `connect-src` in `.htaccess` was `'self'` while `_headers` said `'none'`; the two host paths enforced different policies. Both are now `'none'`.
-- `frame-src 'self'` and `frame-ancestors 'self'` in the header CSP, so the launcher can frame this game while it still cannot frame anything off-origin.
+- `frame-src 'none'` and `frame-ancestors 'self'` in the header CSP. A same-origin page can frame the game. The game cannot frame anything else.
 - Hub ← Games pill styled correctly (CSP blocked inline bridge CSS)
 
 ## 0.1.5 — 2026-09-29

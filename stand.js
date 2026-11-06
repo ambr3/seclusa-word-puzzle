@@ -84,21 +84,19 @@
         scrim.addEventListener("click", close);
         sheet = el("div", "stand-sheet");
         sheet.setAttribute("role", "dialog");
-        sheet.setAttribute("aria-label", copy.name || "Game menu");
+        sheet.setAttribute("aria-label", "App settings");
 
         var closeBtn = el("button", "stand-close", "Close");
         closeBtn.type = "button";
         closeBtn.addEventListener("click", close);
         sheet.appendChild(closeBtn);
-        sheet.appendChild(el("h2", null, copy.name || "Game"));
 
         if (copy.sound !== false) {
-            sheet.appendChild(el("h2", null, "Sound"));
+            sheet.appendChild(el("h2", null, "Sounds"));
+            var soundOn = read(KEY_SOUND, "true") !== "false";
             var soundRow = el("div", "stand-row");
-            var on = read(KEY_SOUND, "true") !== "false";
-            soundRow.appendChild(choice(on ? "Sound on" : "Sound off", on, function () {
-                on = !on;
-                write(KEY_SOUND, on ? "true" : "false");
+            soundRow.appendChild(choice(soundOn ? "Sounds on" : "Sounds off", soundOn, function () {
+                write(KEY_SOUND, soundOn ? "false" : "true");
                 close();
                 open();
             }));
@@ -139,17 +137,15 @@
         (copy.about || []).forEach(function (line) {
             sheet.appendChild(el("p", null, line));
         });
-        if (copy.source) {
-            var link = el("a", "stand-link", "Source");
-            link.href = copy.source;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            sheet.appendChild(link);
+        var versionMeta = document.querySelector('meta[name="version"]');
+        if (versionMeta && versionMeta.content) {
+            sheet.appendChild(el("p", null, "Version " + versionMeta.content));
         }
 
         sheet.appendChild(el("h2", null, "Fullscreen"));
         var full = el("div", "stand-row");
-        full.appendChild(choice("Toggle fullscreen", false, function () {
+        var fullOn = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        full.appendChild(choice(fullOn ? "Fullscreen on" : "Fullscreen off", fullOn, function () {
             var node = document.documentElement;
             var active = document.fullscreenElement || document.webkitFullscreenElement;
             var done = active
@@ -167,18 +163,15 @@
     }
 
     function boot() {
-        var button = el("button", "stand-more", "More");
+        var button = el("button", "stand-more", "App settings");
         button.type = "button";
-        button.setAttribute("aria-label", "Theme, sound, how to play and about");
+        button.setAttribute("aria-label", "App settings");
         if (copy.corner) button.setAttribute("data-corner", copy.corner);
         button.addEventListener("click", open);
         document.body.appendChild(button);
         document.addEventListener("keydown", function (event) {
             if (event.key === "Escape") close();
         });
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js").catch(function () {});
-        }
     }
 
     if (document.readyState === "loading") {

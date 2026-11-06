@@ -255,6 +255,7 @@
     let timeLeft = 120;
     let timerInterval = null;
     let isPlaying = false;
+    let roundId = 0;
     let isDragging = false;
     let pendingStart = null;
     let dragStartPoint = { x: 0, y: 0 };
@@ -781,6 +782,27 @@
         streak = 0;
     }
 
+    function pendingStillApplies(submittedRound, currentRound, playing, alreadyFound) {
+        return submittedRound === currentRound && !!playing && !alreadyFound;
+    }
+
+    function pathOnGrid(path, board) {
+        if (!Array.isArray(path) || !Array.isArray(board)) return false;
+        return path.every((pos) => {
+            if (!pos) return false;
+            const row = board[pos.row];
+            return Array.isArray(row) && typeof row[pos.col] === 'string' && row[pos.col].length > 0;
+        });
+    }
+
+    function resultTitle(reason, gameMode, leveledUp) {
+        if (leveledUp > 0) return 'Level Up!';
+        if (reason === 'quit' && gameMode !== 'zen') return 'Round ended';
+        if (gameMode === 'zen') return 'Round Complete';
+        if (gameMode === 'challenge') return 'Challenge Complete';
+        return 'Time\u2019s Up!';
+    }
+
     function submitWord() {
         if (!isPlaying) return;
         const path = selected.slice();
@@ -803,9 +825,11 @@
         // Not in the built-in list yet — wait for words.js before rejecting, so a
         // valid rare word submitted during the async load is not scored as invalid.
         if (!dictReady) {
+            const submittedRound = roundId;
             showToast('Checking…');
             whenDictReady().then(() => {
-                if (!isPlaying || foundWords.has(word)) return;
+                if (!pendingStillApplies(submittedRound, roundId, isPlaying, foundWords.has(word))) return;
+                if (!pathOnGrid(path, grid)) return;
                 if (WORDS.has(word)) acceptWord(word, path);
                 else rejectWord(word, path);
             });
@@ -824,7 +848,7 @@
             challengeWords++;
             $('challenge-count').textContent = 'Words: ' + challengeWords + ' / ' + CHALLENGE_MAX_WORDS;
             if (challengeWords >= CHALLENGE_MAX_WORDS) {
-                endGame();
+                endGame('challenge');
                 return;
             }
         }
@@ -901,7 +925,7 @@
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 timerInterval = null;
-                endGame();
+                endGame('time');
             }
         }, 1000);
     }
@@ -975,6 +999,7 @@
     // ── Game Flow ───────────────────────────────────────────────────────────
     function startGame() {
         stopTimer();
+        roundId++;
         score = 0;
         foundWords.clear();
         challengeWords = 0;
@@ -1002,7 +1027,7 @@
         startTimer();
     }
 
-    function endGame() {
+    function endGame(reason) {
         if (!isPlaying) return;
         stopTimer();
         isPlaying = false;
@@ -1019,7 +1044,7 @@
         const longest = words.reduce((a, b) => b.length > a.length ? b : a, '');
         $('longest-word').textContent = longest || '-';
         $('best-word').textContent = bestWord ? bestWord + ' (+' + bestWordPts + ')' : '-';
-        saveHighScore(mode, score, words.length);
+        if (score > 0) saveHighScore(mode, score, words.length);
 
         updateLevelDisplay();
 
@@ -1030,15 +1055,12 @@
         const pct = Math.min(100, Math.round((p.xp / needed) * 100));
         progressBox.classList.remove('hidden');
         if (result.leveledUp > 0) {
-            $('result-title').textContent = 'Level Up!';
+            $('result-title').textContent = resultTitle(reason, mode, result.leveledUp);
             $('level-progress-text').textContent = '+' + xp + ' XP · Level ' + result.level + '!';
             fill.style.width = '0%';
             setTimeout(() => { fill.style.width = '100%'; }, 100);
         } else {
-            $('result-title').textContent =
-                mode === 'zen' ? 'Round Complete' :
-                mode === 'challenge' ? 'Challenge Complete' :
-                'Time\u2019s Up!';
+            $('result-title').textContent = resultTitle(reason, mode, 0);
             fill.style.width = pct + '%';
             $('level-progress-text').textContent = '+' + xp + ' XP · ' + p.xp + ' / ' + needed + ' toward Level ' + (p.level + 1);
         }
@@ -1137,7 +1159,7 @@
     $('btn-replay').addEventListener('click', startGame);
     $('btn-quit').addEventListener('click', () => {
         if (!isPlaying) return;
-        endGame();
+        endGame('quit');
     });
     $('level-minus').addEventListener('click', () => setSelectedLevel(levelSelect - 1));
     $('level-plus').addEventListener('click', () => setSelectedLevel(levelSelect + 1));
@@ -1155,7 +1177,7 @@
         levelSelect = 1;
         renderHighScores();
         updateLevelDisplay();
-        showToast('All data cleared');
+        showToast('Scores and progress cleared');
     });
 
     document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -1240,6 +1262,9 @@
             pickLetters,
             scorePath,
             isWord: (word) => WORDS.has(word),
+            pendingStillApplies,
+            pathOnGrid,
+            resultTitle,
         };
     }
 })();

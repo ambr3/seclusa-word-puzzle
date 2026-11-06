@@ -28,10 +28,7 @@
  *   design relies on that.
  */
 
-/*
- * The one manifest, at the app root. `../../` climbs out of this worker's scope,
- * which is /games/word-puzzle/, to reach it.
- */
+/* Manifest beside this worker. The cache name is its version. */
 const MANIFEST_URL = new URL('./manifest.json', self.location);
 
 /*
@@ -175,6 +172,7 @@ const ASSETS = [
     './words.js',
     './game.js',
     './manifest.json',
+    './LICENSE',
     './icons/icon.svg',
     './icons/icon-192.png',
     './icons/icon-512.png',
@@ -194,20 +192,6 @@ const ASSETS = [
     './assets/fonts/sora-latin-700-normal.woff2',
     './assets/fonts/sora-latin-800-normal.woff2',
 ];
-
-/*
- * The launcher's shared design system, loaded by this document as ../../theme.css and
- * ../../theme-game.js. They live above this worker's scope and are owned by the launcher,
- * so they are not in ASSETS — but the game needs them to render at all, offline
- * included, so they are cached explicitly.
- *
- * The root manifest.json is here for a second reason: versionFromOwnCache() recovers the
- * app version from the root manifest in our own cache when the network is gone, so stale
- * caches can still be retired offline. That lookup could never succeed unless the root
- * manifest were actually cached here — it was not, so it always missed and took cache
- * retirement with it. Precaching it makes the comment true.
- */
-const SHARED_ASSETS = [];
 
 /**
  * True only for a real, same-origin, 2xx document.
@@ -233,11 +217,6 @@ function toCacheKey(request) {
     url.search = '';
     url.hash = '';
     return new Request(url.toString());
-}
-
-/** True for the shared launcher files, which must not be served from cache first. */
-function isSharedAsset(pathname) {
-    return SHARED_ASSETS.indexOf(pathname) !== -1;
 }
 
 /** This worker's own files, as './'-relative paths, or null for anything else. */
@@ -293,10 +272,8 @@ self.addEventListener('install', (e) => {
     e.waitUntil(
         withCache().then((c) =>
             // `cache: 'no-store'`, not `c.add()`: add() goes through the HTTP cache, which
-            // can seal yesterday's words.js into this version. Additive, matching the
-            // blockfall worker: the shared launcher files are cached here too, so a cold
-            // offline load has the stylesheet and the version it needs.
-            Promise.allSettled(ASSETS.concat(SHARED_ASSETS).map((url) =>
+            // can seal yesterday's words.js into this version.
+            Promise.allSettled(ASSETS.map((url) =>
                 fetch(url, { cache: 'no-store' })
                     .then((res) => (isRealDocument(res) ? c.put(url, res) : null))
                     .catch(() => null)
@@ -336,35 +313,6 @@ self.addEventListener('fetch', (e) => {
                     return res;
                 })
                 .catch(() => serveFromCache(req))
-        );
-        return;
-    }
-
-    /*
-     * This worker used to respond to EVERY same-origin GET with a cache-first lookup,
-     * which meant it quietly absorbed — and permanently pinned — files it does not own,
-     * including the launcher's shared stylesheet and theme script. Those are served
-     * network-first below.
-     */
-    if (isSharedAsset(url.pathname)) {
-        const key = toCacheKey(req);
-        e.respondWith(
-            fetch(req)
-                .then((res) => {
-                    if (res && res.ok) {
-                        const clone = res.clone();
-                        e.waitUntil(withCache().then((c) => c.put(key, clone)).catch(() => {}));
-                        return res;
-                    }
-                    return withCache()
-                        .then((cache) => cache.match(key))
-                        .then((cached) => cached || res);
-                })
-                .catch(() =>
-                    withCache()
-                        .then((cache) => cache.match(key))
-                        .then((cached) => cached || new Response('', { status: 503, statusText: 'Offline' }))
-                )
         );
         return;
     }

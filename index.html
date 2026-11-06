@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="seclusa-base.css">
     <link rel="stylesheet" href="mono.css">
     <link rel="stylesheet" href="style.css">
-    <meta name="version" content="0.1.0">
+    <meta name="version" content="0.1.1">
     <link rel="stylesheet" href="stand.css">
 </head>
 <body>
@@ -156,12 +156,6 @@
                     <button id="btn-highscores" class="btn btn-secondary">High Scores</button>
                 </div>
                 <div id="dict-status" class="dict-status"></div>
-            <!--
-                The "Made with / version / About the author" footer used to live here.
-                Attribution and the app version are the launcher's job now — see the
-                About dialog in the app-level theme.js, and the single version in
-                manifest.json.
-            -->
             </div>
         </div>
 
@@ -251,12 +245,30 @@
                 <ol id="highscore-list"></ol>
                 <p id="no-scores" class="hidden">No scores yet. Play a game!</p>
             </div>
-            <button id="btn-clear-scores" class="btn btn-danger">Clear All Data</button>
+            <button id="btn-clear-scores" class="btn btn-danger">Clear scores and progress</button>
             <button id="btn-hs-menu" class="btn btn-secondary">Menu</button>
         </div>
 
         <div id="toast" class="toast hidden"></div>
     </div>
+
+    <footer class="game-foot">
+        <p class="game-credits">
+            <a href="LICENSE">GPL-3.0</a>
+            · <a href="https://github.com/ambr3/seclusa-word-puzzle" target="_blank" rel="noopener noreferrer">Source</a>
+            · Made with <span class="heart" role="img" aria-label="love">&#10084;&#65039;</span>
+            <svg class="flag" viewBox="0 0 60 30" role="img" aria-label="United Kingdom">
+                <clipPath id="game-uk-clip"><rect width="60" height="30" /></clipPath>
+                <g clip-path="url(#game-uk-clip)">
+                    <rect width="60" height="30" fill="#012169" />
+                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6" />
+                    <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4" />
+                    <path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10" />
+                    <path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6" />
+                </g>
+            </svg>
+        </p>
+    </footer>
 
     <script src="game.js"></script>
     <script src="stand-help.js"></script>
