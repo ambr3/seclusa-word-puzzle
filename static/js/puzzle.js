@@ -127,8 +127,21 @@
       var prog = data.puzzle.progress;
       var needed = PL.xpNeededFor(prog.level);
       root.innerHTML =
-        '<div class="pz-menu">' +
-          '<div class="panel"><div class="section how-play">' +
+        '<div class="pz-menu mode-page">' +
+          '<section class="mode-hero" aria-label="Puzzle">' +
+            '<div class="mode-card-top">' +
+              '<span class="mode-mark" aria-hidden="true">P</span>' +
+              '<span class="mode-tag">Signature</span>' +
+            '</div>' +
+            '<div class="mode-card-body">' +
+              '<div class="mode-card-copy">' +
+                '<h2 class="mode-name">Puzzle</h2>' +
+                '<p class="mode-blurb">Drag letters on a grid. Classic, Rush, Zen, or Challenge.</p>' +
+              '</div>' +
+              '<span class="mode-preview mode-preview-puzzle" aria-hidden="true" id="pz-hero-preview"></span>' +
+            '</div>' +
+          '</section>' +
+          '<div class="panel mode-start"><div class="section how-play">' +
             '<h2>How to play</h2>' +
             '<ol class="how-steps">' +
               '<li>You get a board full of letters.</li>' +
@@ -146,10 +159,10 @@
             '<div class="statcell"><span class="statkey">Profile</span><span class="statvalue" id="pz-lv"></span><span class="statsub" id="pz-xp"></span></div>' +
             '<div class="statcell"><span class="statkey">Best word</span><span class="statvalue stat-word" id="pz-best"></span><span class="statsub" id="pz-best-pts"></span></div>' +
           '</div>' +
-          '<div class="panel mt12"><div class="section">' +
+          '<div class="panel mt12 mode-start"><div class="section">' +
             '<h2>Mode</h2>' +
             '<div class="pz-modes" id="pz-modes"></div>' +
-          '</div><div class="section">' +
+          '</div><div class="section settings-block">' +
             '<h2>Difficulty</h2>' +
             '<div class="pz-diff-row">' +
               '<button type="button" class="btn" id="pz-diff-minus" aria-label="Lower difficulty">−</button>' +
@@ -158,14 +171,26 @@
             '</div>' +
             '<p class="meta-line mt10">1–5 easy 4×4 · 6–10 mixed · 11–15 5×5 · 16–20 hard · 21–100 6×6</p>' +
           '</div><div class="section">' +
-            '<button type="button" class="btn primary wide" id="pz-play">Play</button>' +
+            '<button type="button" class="btn primary wide mode-play-btn" id="pz-play">Play</button>' +
           '</div></div>' +
-          '<div class="panel mt12"><div class="section">' +
+          '<div class="panel mt12 mode-start"><div class="section">' +
             '<h2>High scores</h2>' +
             '<div class="pz-hs-tabs" id="pz-hs-tabs"></div>' +
             '<ul class="pz-hs-list" id="pz-hs-list"></ul>' +
           '</div></div>' +
         '</div>';
+
+      var previewHost = root.querySelector("#pz-hero-preview");
+      if (previewHost) {
+        var cells = "W O R D P L A Y G A M E S U N T".split(" ");
+        var path = { 0: 1, 1: 1, 2: 1, 3: 1 };
+        cells.forEach(function (ch, i) {
+          var cell = document.createElement("span");
+          cell.className = "mp-cell" + (path[i] ? " on" : "");
+          cell.textContent = ch;
+          previewHost.appendChild(cell);
+        });
+      }
 
       root.querySelector("#pz-diff").textContent = String(difficulty);
       root.querySelector("#pz-diff-sub").textContent = cfg.diff + " · " + cfg.size + "×" + cfg.size;

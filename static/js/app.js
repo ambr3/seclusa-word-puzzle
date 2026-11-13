@@ -217,11 +217,26 @@
     state.session = null;
   }
 
+  function clearModeTheme() {
+    var play = $("play-screen");
+    if (!play) return;
+    play.classList.remove("mode-theme");
+    MODES.forEach(function (m) { play.classList.remove("mode-" + m.id); });
+  }
+
+  function applyModeTheme(modeId) {
+    var play = $("play-screen");
+    if (!play) return;
+    clearModeTheme();
+    play.classList.add("mode-theme", "mode-" + modeId);
+  }
+
   function showHub() {
     cleanupSession();
     state.mode = null;
     state.phase = "hub";
     state.howOpen = false;
+    clearModeTheme();
     $("hub-screen").classList.remove("hidden");
     $("play-screen").classList.add("hidden");
     $("btn-back").classList.add("hidden");
@@ -243,6 +258,7 @@
     $("btn-back").classList.remove("hidden");
     $("brand").textContent = mode.name;
     $("play-title").textContent = mode.name;
+    applyModeTheme(mode.id);
     setStatus("play-status", "");
     renderModeShell();
   }
@@ -510,6 +526,44 @@
     var stats = data.stats[mode.id] || {};
     var hints = DIFF_HINT[mode.id] || {};
 
+    var page = document.createElement("div");
+    page.className = "mode-page";
+
+    var hero = document.createElement("section");
+    hero.className = "mode-hero";
+    hero.setAttribute("aria-label", mode.name);
+
+    var top = document.createElement("div");
+    top.className = "mode-card-top";
+    var mark = document.createElement("span");
+    mark.className = "mode-mark";
+    mark.setAttribute("aria-hidden", "true");
+    mark.textContent = mode.mark || mode.name.charAt(0);
+    var tag = document.createElement("span");
+    tag.className = "mode-tag";
+    tag.textContent = mode.tag || "Play";
+    top.appendChild(mark);
+    top.appendChild(tag);
+
+    var body = document.createElement("div");
+    body.className = "mode-card-body";
+    var copy = document.createElement("div");
+    copy.className = "mode-card-copy";
+    var title = document.createElement("h2");
+    title.className = "mode-name";
+    title.textContent = mode.name;
+    var blurb = document.createElement("p");
+    blurb.className = "mode-blurb";
+    blurb.textContent = mode.blurb;
+    copy.appendChild(title);
+    copy.appendChild(blurb);
+    body.appendChild(copy);
+    body.appendChild(buildModePreview(mode.id));
+
+    hero.appendChild(top);
+    hero.appendChild(body);
+    page.appendChild(hero);
+
     var panel = document.createElement("div");
     panel.className = "panel mode-start";
     panel.innerHTML =
@@ -524,16 +578,18 @@
           '<div class="statcell"><span class="statkey">Difficulty</span><span class="statvalue" id="ms-diff-label">Medium</span><span class="statsub" id="ms-diff-hint"></span></div>' +
         '</div>' +
       '</div>' +
-      '<div class="section">' +
+      '<div class="section settings-block">' +
         '<h2>Difficulty</h2>' +
         '<div class="diff-row" id="diff-row" role="group" aria-label="Difficulty"></div>' +
         '<p class="meta-line mt10" id="diff-detail"></p>' +
       '</div>' +
       '<div class="section">' +
-        '<button type="button" class="btn primary wide" id="btn-mode-play">Play</button>' +
+        '<button type="button" class="btn primary wide mode-play-btn" id="btn-mode-play">Play</button>' +
       '</div>';
 
-    root.appendChild(panel);
+    page.appendChild(panel);
+    root.appendChild(page);
+
     var stepsEl = panel.querySelector("#mode-how-steps");
     var steps = HOW[mode.id] || [mode.blurb];
     steps.forEach(function (line) {

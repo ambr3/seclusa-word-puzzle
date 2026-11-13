@@ -2,6 +2,11 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.2 — 2026-11-13
+
+### Changed
+- Per-game start menus and play chrome use the same coloured hero theme as the hub cards.
+
 ## 0.3.1 — 2026-11-13
 
 ### Changed
