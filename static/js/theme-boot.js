@@ -30,7 +30,12 @@
   function readPref() {
     try {
       var v = localStorage.getItem(KEY_THEME);
-      return v === "light" || v === "dark" ? v : null;
+      if (v === "light" || v === "dark") return v;
+      var raw = localStorage.getItem(KEY_SETTINGS);
+      if (!raw) return null;
+      var parsed = JSON.parse(raw);
+      if (parsed && (parsed.theme === "light" || parsed.theme === "dark")) return parsed.theme;
+      return null;
     } catch (err) {
       return null;
     }

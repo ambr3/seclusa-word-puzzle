@@ -2,6 +2,20 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.3 — 2026-11-13
+
+### Fixed
+- Erase saved data resets theme/background in the UI (not only storage).
+- Puzzle high scores no longer store 0-point rounds.
+- Sample headers allow same-origin framing again for the Seclusa Games launcher.
+- Theme boot also reads `wordplay.settings.theme` when the shared night-mode key is missing.
+- Puzzle play HUD sets the mode label with `textContent`.
+
+### Changed
+- Filtered offensive and racist terms from the offline word list (41 removed from the accept list).
+- Added dictionary source disclaimer in the hub, README, and INSTRUCTIONS.
+- Erase clears only this app’s data keys; theme reset is explicit via Theme.set("system").
+
 ## 0.3.2 — 2026-11-13
 
 ### Changed

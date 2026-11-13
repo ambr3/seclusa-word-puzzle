@@ -2,7 +2,7 @@
 
 Privacy-first offline word games. Everything runs in your browser. After the first load, no network is required. There are no accounts, ads, analytics, or clue APIs.
 
-Storage keys used by this app only: `wordplay.data`, `wordplay.settings`, plus the shared theme key `ssc.pref_key_night_mode`. **Erase saved data** in Settings removes this app’s own keys and nothing else on the origin.
+Storage keys: `wordplay.data` and `wordplay.settings` (this app only), plus the shared Seclusa theme key `ssc.pref_key_night_mode`. **Erase saved data** clears this app’s progress and settings, then resets Theme to System (and the page background to the default lines). It does not wipe other apps’ data on the origin.
 
 ---
 
@@ -17,7 +17,7 @@ The hub lists every game. Tap a game to open **its own start menu** (difficulty,
 | Theme | System / Light / Dark |
 | Dictionary | Shows how many words are stored on this device |
 | Help | Summaries of every mode (see also this file) |
-| Erase saved data | Clears progress, scores, and per-mode difficulty prefs |
+| Erase saved data | Clears progress, scores, and prefs; resets theme to System |
 
 There is no Theme control in the top bar — use Settings.
 
@@ -95,9 +95,13 @@ Each game’s start menu shows a full **How to play** list in simple English. Th
 | List | Role |
 |---|---|
 | Common (~3.9k) | Targets / seeds |
-| All (~150k, length 2–12) | Accept list (from Word Puzzle extras) |
+| All (~152k, length 2–12) | Accept list |
 
-Copied into `static/js/words.js` — not fetched at runtime.
+Stored in `static/js/words.js` — not fetched at runtime.
+
+### Source and content disclaimer
+
+The word lists started from the earlier **Seclusa Word Puzzle** curated common list plus filtered public English word-list extras used for offline play (no network). Offensive, racist, and hateful terms have been removed as far as practicable. Word lists of this size are never perfect: if you spot a word that should not be there, please report it so it can be taken out.
 
 ---
 

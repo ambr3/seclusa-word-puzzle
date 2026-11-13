@@ -13,7 +13,7 @@
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "prefer_related_applications": false,
-  "version": "0.3.2",
+  "version": "0.3.3",
   "icons": [
     {
       "src": "icons/icon-192.png",

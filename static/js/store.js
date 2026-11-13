@@ -216,11 +216,14 @@
     return value;
   }
 
-  /** Removes everything the app owns, and nothing else. */
+  /**
+   * Removes this app's progress and settings only.
+   * Does not touch the shared Seclusa theme key — the Settings erase
+   * handler resets theme to System separately so the UI matches storage.
+   */
   function clearAll() {
     removeRaw(KEY_DATA);
     removeRaw(KEY_SETTINGS);
-    removeRaw(KEY_THEME);
   }
 
   window.Store = {

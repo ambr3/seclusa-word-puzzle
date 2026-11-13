@@ -56,7 +56,12 @@ test("corrupt data is dropped rather than thrown", () => {
 
 test("clearing removes the app's own keys and nothing else", () => {
   const storage = {
-    _v: { "wordplay.data": "{}", "somebody.elses.key": "keep me" },
+    _v: {
+      "wordplay.data": "{}",
+      "wordplay.settings": '{"theme":"dark"}',
+      "ssc.pref_key_night_mode": "dark",
+      "somebody.elses.key": "keep me"
+    },
     getItem(k) { return k in this._v ? this._v[k] : null; },
     setItem(k, v) { this._v[k] = String(v); },
     removeItem(k) { delete this._v[k]; },
@@ -64,6 +69,8 @@ test("clearing removes the app's own keys and nothing else", () => {
   const { Store } = load("store.js", { localStorage: storage });
   Store.clearAll();
   assert.equal(storage.getItem("wordplay.data"), null);
+  assert.equal(storage.getItem("wordplay.settings"), null);
+  assert.equal(storage.getItem("ssc.pref_key_night_mode"), "dark");
   assert.equal(storage.getItem("somebody.elses.key"), "keep me");
 });
 

@@ -1221,6 +1221,15 @@
       var button = $("btn-clear");
       if (button.getAttribute("data-armed") === "yes") {
         window.Store.clearAll();
+        if (window.Theme) {
+          window.Theme.set("system");
+          if (window.Theme.setBackground) window.Theme.setBackground("grid");
+          else if (window.Theme.paintBackground) window.Theme.paintBackground();
+        }
+        if (document.documentElement) {
+          document.documentElement.removeAttribute("data-theme");
+          document.documentElement.setAttribute("data-bg", "grid");
+        }
         button.removeAttribute("data-armed");
         button.textContent = "Erase saved data";
         paintThemeChrome();

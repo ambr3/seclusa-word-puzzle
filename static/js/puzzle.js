@@ -297,7 +297,7 @@
           '<div class="pz-hud">' +
             '<div><span class="statkey">Score</span><span class="statvalue" id="pz-score">0</span></div>' +
             '<div><span class="statkey" id="pz-timer-label">Time</span><span class="statvalue" id="pz-timer">0:00</span></div>' +
-            '<div><span class="statkey">Mode</span><span class="statvalue">' + sm.name + '</span></div>' +
+            '<div><span class="statkey">Mode</span><span class="statvalue" id="pz-mode-name"></span></div>' +
           '</div>' +
           '<div class="pz-challenge hidden" id="pz-challenge"></div>' +
           '<div class="pz-rush hidden" id="pz-rush"><div class="pz-rush-fill" id="pz-rush-fill"></div><span id="pz-rush-text"></span></div>' +
@@ -322,6 +322,8 @@
 
       gridEl = root.querySelector("#pz-grid");
       svgEl = root.querySelector("#pz-path");
+      var modeNameEl = root.querySelector("#pz-mode-name");
+      if (modeNameEl) modeNameEl.textContent = sm.name;
       paintGrid();
       paintHud();
 
@@ -676,15 +678,17 @@
         data.puzzle.bestWord = bestSafe;
         data.puzzle.bestWordPts = bestWordPts;
       }
-      var scores = data.puzzle.scores[submode] || [];
-      scores.push({
-        score: score,
-        words: wordCount,
-        date: new Date().toLocaleDateString()
-      });
-      scores.sort(function (a, b) { return b.score - a.score; });
-      if (scores.length > 10) scores.length = 10;
-      data.puzzle.scores[submode] = scores;
+      if (score > 0) {
+        var scores = data.puzzle.scores[submode] || [];
+        scores.push({
+          score: score,
+          words: wordCount,
+          date: new Date().toLocaleDateString()
+        });
+        scores.sort(function (a, b) { return b.score - a.score; });
+        if (scores.length > 10) scores.length = 10;
+        data.puzzle.scores[submode] = scores;
+      }
       savePuzzleData(data);
       onRoundEnd({ won: won, reason: lastEndReason, words: wordCount, score: score });
       phase = "result";
