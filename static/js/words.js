@@ -1,6 +1,7 @@
 /* Seclusa Word Puzzle dictionary — offline only. Common = puzzle targets; All = accept list. */
-/* Sourced from the previous Seclusa Word Puzzle curated list plus filtered public word-list extras. */
-/* Offensive and hateful terms have been removed as far as practicable; see README / INSTRUCTIONS. */
+/* Common: curated everyday list from the original Seclusa Word Puzzle (game.js built-in). */
+/* All: ENABLE1 (Enhanced North American Benchmark Lexicon; public domain), lengths 2–12. */
+/* Offensive and hateful terms removed as far as practicable; see README / INSTRUCTIONS. */
 window.WORDPLAY_COMMON = [
   'aa','ab','abide','ability','able','abolish','about','above','absence','absorb','abuse','academy','accept','access','account','ace','ache','achieve','acid','acquire',
   'acre','across','act','action','active','actual','acute','ad','adapt','add','address','admit','adopt','adore','adult','advance','adverse','advice','advise','adviser',

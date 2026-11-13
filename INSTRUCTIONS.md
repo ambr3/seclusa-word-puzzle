@@ -101,7 +101,12 @@ Stored in `static/js/words.js` — not fetched at runtime.
 
 ### Source and content disclaimer
 
-The word lists started from the earlier **Seclusa Word Puzzle** curated common list plus filtered public English word-list extras used for offline play (no network). Offensive, racist, and hateful terms have been removed as far as practicable. Word lists of this size are never perfect: if you spot a word that should not be there, please report it so it can be taken out.
+| List | Original source |
+|---|---|
+| **Common** | Curated everyday words from the original Seclusa Word Puzzle built-in list (`game.js`). |
+| **All** (accept list) | **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** — the Enhanced North American Benchmark Lexicon (M. Leo Cooper & Alan Beale), released into the **public domain**. Copied offline, limited to lengths 2–12. |
+
+Neither list is fetched at runtime. Offensive, racist, and hateful terms have been removed as far as practicable. Lists this size are never perfect: if you spot a word that should not be there, please report it so it can be taken out.
 
 ---
 

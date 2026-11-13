@@ -2,6 +2,11 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.4 — 2026-11-13
+
+### Changed
+- Dictionary disclaimer now names the original sources: curated Seclusa Word Puzzle common list, and ENABLE1 (public domain) for the accept list.
+
 ## 0.3.3 — 2026-11-13
 
 ### Fixed
