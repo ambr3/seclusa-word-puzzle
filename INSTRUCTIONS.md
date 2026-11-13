@@ -94,19 +94,16 @@ Each game’s start menu shows a full **How to play** list in simple English. Th
 
 | List | Role |
 |---|---|
-| Common (~3.9k) | Targets / seeds |
+| Common (ENABLE1 lengths 4–7) | Puzzle targets / seeds |
 | All (~152k, length 2–12) | Accept list |
 
 Stored in `static/js/words.js` — not fetched at runtime.
 
 ### Source and content disclaimer
 
-| List | Original source |
-|---|---|
-| **Common** | Curated everyday words from the original Seclusa Word Puzzle built-in list (`game.js`). |
-| **All** (accept list) | **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** — the Enhanced North American Benchmark Lexicon (M. Leo Cooper & Alan Beale), released into the **public domain**. Copied offline, limited to lengths 2–12. |
+Every word comes from **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** (Enhanced North American Benchmark Lexicon), compiled by M. Cooper and Alan Beale and released into the **public domain**. That is not an “open source” software licence — it is public domain: free to use and redistribute. Credit: Cooper & Beale.
 
-Neither list is fetched at runtime. Offensive, racist, and hateful terms have been removed as far as practicable. Lists this size are never perfect: if you spot a word that should not be there, please report it so it can be taken out.
+Copied offline, limited to lengths 2–12. Targets are the same list filtered to lengths 4–7 (no separate curated Word Puzzle list). Offensive terms have been removed as far as practicable. Please report any that remain.
 
 ---
 

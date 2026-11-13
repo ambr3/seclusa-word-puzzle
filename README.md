@@ -4,7 +4,7 @@ Offline Seclusa word games in one PWA. **Puzzle** (Classic / Rush / Zen / Challe
 
 No clues, no accounts, no network after load (`connect-src 'none'`).
 
-**Version:** 0.3.4  
+**Version:** 0.3.5  
 **Source:** [github.com/ambr3/seclusa-word-puzzle](https://github.com/ambr3/seclusa-word-puzzle)
 
 ## Documentation
@@ -13,12 +13,7 @@ No clues, no accounts, no network after load (`connect-src 'none'`).
 
 ## Dictionary disclaimer
 
-Shipped offline in `static/js/words.js` (no network):
-
-- **Common** — curated everyday words from the original Seclusa Word Puzzle built-in list.
-- **All** — **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** (Enhanced North American Benchmark Lexicon; public domain), lengths 2–12.
-
-Offensive and racist terms have been removed to the best of our ability; please report any that remain.
+Every word is from **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** (M. Cooper & Alan Beale), **public domain** — not an open-source software licence. Shipped offline in `static/js/words.js` (lengths 2–12; targets use 4–7). Offensive terms removed as far as practicable; please report any that remain.
 
 ## License
 

@@ -1,15 +1,16 @@
 /*
  * Seclusa Word Puzzle dictionary helpers — offline only, no network.
  *
- * Expects window.WORDPLAY_COMMON (puzzle targets) and window.WORDPLAY_ALL
- * (accept list) from words.js.
+ * Expects window.WORDPLAY_ALL from words.js (ENABLE1, public domain).
+ * Puzzle targets ("common") are ENABLE1 words of length 4–7 — not a
+ * separate curated list.
  */
 
 (function () {
   "use strict";
 
-  var COMMON = Array.isArray(window.WORDPLAY_COMMON) ? window.WORDPLAY_COMMON.slice() : [];
-  var ALL = Array.isArray(window.WORDPLAY_ALL) ? window.WORDPLAY_ALL.slice() : COMMON.slice();
+  var ALL = Array.isArray(window.WORDPLAY_ALL) ? window.WORDPLAY_ALL.slice() : [];
+  var COMMON = [];
   var commonSet = Object.create(null);
   var allSet = Object.create(null);
   var byLenCommon = Object.create(null);
@@ -26,8 +27,17 @@
     }
   }
 
-  index(COMMON, commonSet, byLenCommon);
   index(ALL, allSet, byLenAll);
+  for (var len = 4; len <= 7; len++) {
+    var bucket = byLenAll[len] || [];
+    for (var i = 0; i < bucket.length; i++) {
+      var w = bucket[i];
+      COMMON.push(w);
+      commonSet[w] = 1;
+      if (!byLenCommon[len]) byLenCommon[len] = [];
+      byLenCommon[len].push(w);
+    }
+  }
 
   function isCommon(word) {
     return !!(word && commonSet[String(word).toLowerCase()]);

@@ -2,6 +2,12 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.5 — 2026-11-13
+
+### Changed
+- Dictionary is ENABLE1 only (public domain). Removed the separate curated Word Puzzle common list; targets are ENABLE1 lengths 4–7.
+- Disclaimer wording: public domain (not “open source”); summary says offensive terms only.
+
 ## 0.3.4 — 2026-11-13
 
 ### Changed
