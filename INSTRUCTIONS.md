@@ -101,9 +101,9 @@ Stored in `static/js/words.js` — not fetched at runtime.
 
 ### Source and content disclaimer
 
-Every word comes from **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** (Enhanced North American Benchmark Lexicon), compiled by M. Cooper and Alan Beale and released into the **public domain**. That is not an “open source” software licence — it is public domain: free to use and redistribute. Credit: Cooper & Beale.
+Every word comes from **[ENABLE1](https://en.wikipedia.org/wiki/ENABLE_(word_list))** (Enhanced North American Benchmark Lexicon), released into the **public domain**. That is not an “open source” software licence — it is public domain: free to use and redistribute. The Wikipedia page is the credit link.
 
-Copied offline, limited to lengths 2–12. Targets are the same list filtered to lengths 4–7 (no separate curated Word Puzzle list). Offensive terms have been removed as far as practicable. Please report any that remain.
+Copied offline, limited to lengths 2–12. Targets are the same list filtered to lengths 4–7. Offensive terms have been removed as far as practicable. Please report any that remain.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "name": "seclusa-word-puzzle",
   "private": true,
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Seclusa Word Puzzle — offline word games. Dev scripts only; the app has no runtime dependencies.",
   "type": "module",
   "scripts": {

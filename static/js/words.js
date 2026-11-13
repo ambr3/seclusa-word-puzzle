@@ -1,6 +1,5 @@
 /* Seclusa Word Puzzle dictionary — offline only. */
-/* Sole source: ENABLE1 (Enhanced North American Benchmark Lexicon), */
-/* compiled by M. Cooper and Alan Beale, released into the public domain. */
+/* Sole source: ENABLE1 (public domain). Credit: https://en.wikipedia.org/wiki/ENABLE_(word_list) */
 /* Not an “open source” software licence — public domain. Lengths 2–12. */
 /* Offensive terms removed as far as practicable; see README / INSTRUCTIONS. */
 /* Targets (common) are derived in dict.js from this list (lengths 4–7). */

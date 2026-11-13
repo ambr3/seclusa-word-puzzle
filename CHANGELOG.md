@@ -2,6 +2,11 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.6 — 2026-11-13
+
+### Changed
+- Dictionary credit: ENABLE1 link only (no author names in the UI copy).
+
 ## 0.3.5 — 2026-11-13
 
 ### Changed
