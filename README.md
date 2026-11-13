@@ -1,19 +1,40 @@
-# Word Puzzle
+# Seclusa Word Puzzle
 
-Find words on a grid. Progress stays on your device.
+Offline Seclusa word games in one PWA. **Puzzle** (Classic / Rush / Zen / Challenge) plus Ladder, Scrabble, Guess, and Blanks.
 
-This game runs in the browser. No sign-up, no adverts, and nothing about how you
-play is sent anywhere. Add it to your home screen and it works offline.
+No clues, no accounts, no network after load (`connect-src 'none'`).
 
-- Version 0.1.1
-- Play: https://ambr3.github.io/seclusa-word-puzzle/
-- Source: https://github.com/ambr3/seclusa-word-puzzle
+**Version:** 0.3.0  
+**Repo:** [ambr3/seclusa-word-puzzle](https://github.com/ambr3/seclusa-word-puzzle)
 
-## Forked from
+## Documentation
 
-- A word puzzle. The word list and your scores stay on this device. No account, no ads, nothing sent anywhere.
-- GPL-3.0.
+**[INSTRUCTIONS.md](INSTRUCTIONS.md)** — how to play every mode, dictionary notes, privacy, run steps.
+
+## Run
+
+```bash
+python3 -m http.server 8765 --bind 127.0.0.1 --directory .
+```
+
+Open `http://127.0.0.1:8765/`.
+
+## Testing
+
+```bash
+./tools/test.sh
+# or
+npm test
+```
+
+UI stress (Playwright):
+
+```bash
+cd test/stress && npm test
+```
 
 ## License
 
 GPL-3.0. See [LICENSE](LICENSE).
+
+Made with ❤️ 🇬🇧

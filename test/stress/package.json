@@ -1,0 +1,13 @@
+{
+  "name": "seclusa-word-puzzle-stress",
+  "private": true,
+  "version": "0.3.0",
+  "description": "Playwright stress harness for Seclusa Word Puzzle. Dev-only — the app has no runtime deps.",
+  "type": "module",
+  "scripts": {
+    "test": "node run.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}

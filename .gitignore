@@ -4,8 +4,12 @@
 .env.*
 *.pem
 *.key
-*.p12
-keystore.properties
+
+node_modules/
+test/stress/node_modules/
+test/stress/test-results/
+test/stress/playwright-report/
+test/stress/.cache/
 
 __pycache__/
 *.py[cod]

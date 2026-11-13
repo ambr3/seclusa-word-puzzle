@@ -1,6 +1,16 @@
 # Changelog
 
-All notable changes to **Word Puzzle**.
+All notable changes to **Seclusa Word Puzzle**.
+
+## 0.3.0 — 2026-11-13
+
+### Changed
+- Rebuilt as a multi-mode offline PWA: **Puzzle** (Classic / Rush / Zen / Challenge), Ladder, Scrabble, Guess, and Blanks.
+- Same GitHub Pages repo and icons as the previous Word Puzzle app.
+- Child-friendly How to play lists on every game start menu.
+- Guess uses clear Wordle colours; Guess/Blanks use on-screen keys on touch and the physical keyboard on desktop.
+- Bee and Grid modes removed (overlap with Puzzle / Scrabble).
+- GPL-3.0 footer with Made with ❤️ 🇬🇧.
 
 ## 0.1.1 — 2026-11-06
 
