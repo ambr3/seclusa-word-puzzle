@@ -2,6 +2,11 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.1 — 2026-11-13
+
+### Changed
+- Hub polish: distinct coloured game cards with mini previews, hero panel, and roomier Settings layout.
+
 ## 0.3.0 — 2026-11-13
 
 ### Changed

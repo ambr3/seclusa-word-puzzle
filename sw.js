@@ -24,7 +24,7 @@
  *     they hard-reload: new hashes, old bytes.
  */
 
-const VERSION = "0.3.0";
+const VERSION = "0.3.1";
 const CACHE_PREFIX = "seclusa-word-puzzle-";
 const CACHE = `${CACHE_PREFIX}v${VERSION}`;
 
