@@ -42,34 +42,48 @@
 </header>
 
 <div id="hub-screen" class="screen">
-  <main class="wrap">
-    <p class="lede">Word games on this device. One dictionary. No clues, no accounts, no network after load.</p>
-    <p class="status" id="hub-status" role="status" aria-live="polite"></p>
+  <main class="wrap hub-wrap">
+    <section class="hub-hero" aria-label="Welcome">
+      <p class="hub-kicker">Seclusa</p>
+      <h2 class="hub-title">Word Puzzle</h2>
+      <p class="hub-lede">Five word games. One dictionary. Everything stays on this device — no clues, no accounts, no network after load.</p>
+      <p class="status" id="hub-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <p class="hub-section-label">Choose a game</p>
     <div class="mode-grid" id="mode-grid"></div>
 
-    <div class="panel mt18">
+    <div class="panel hub-settings mt18">
       <div class="section">
         <h2>Settings</h2>
         <p class="muted">Applies to every game.</p>
 
-        <p class="theme-section-label mt14">Theme</p>
-        <div class="theme-mode-row" role="group" aria-label="Colour mode" id="hub-theme-row">
-          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="system" aria-checked="false">System</button>
-          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="light" aria-checked="false">Light</button>
-          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="dark" aria-checked="false">Dark</button>
+        <div class="settings-block">
+          <p class="theme-section-label">Theme</p>
+          <div class="theme-mode-row" role="group" aria-label="Colour mode" id="hub-theme-row">
+            <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="system" aria-checked="false">System</button>
+            <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="light" aria-checked="false">Light</button>
+            <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="dark" aria-checked="false">Dark</button>
+          </div>
         </div>
 
-        <p class="theme-section-label mt14">Dictionary</p>
-        <p class="muted nomargin" id="dict-stats"></p>
+        <div class="settings-block">
+          <p class="theme-section-label">Dictionary</p>
+          <p class="muted nomargin" id="dict-stats"></p>
+        </div>
 
-        <p class="theme-section-label mt14">Help</p>
-        <button type="button" class="btn mt10" id="btn-instructions">Show how to play every game</button>
-        <div class="how-box mt12" id="hub-instructions" hidden></div>
-        <p class="muted mt10">Full docs: INSTRUCTIONS.md in this folder.</p>
+        <div class="settings-block">
+          <p class="theme-section-label">Help</p>
+          <button type="button" class="btn" id="btn-instructions">Show how to play every game</button>
+          <div class="how-box mt12" id="hub-instructions" hidden></div>
+          <p class="muted settings-note">Full docs: INSTRUCTIONS.md in this folder.</p>
+        </div>
 
-        <p class="theme-section-label mt14">Data</p>
-        <div class="buttonrow mt10">
-          <button type="button" class="btn danger" id="btn-clear">Erase saved data</button>
+        <div class="settings-block">
+          <p class="theme-section-label">Data</p>
+          <div class="buttonrow">
+            <button type="button" class="btn danger" id="btn-clear">Erase saved data</button>
+          </div>
         </div>
       </div>
     </div>

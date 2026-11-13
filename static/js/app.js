@@ -11,11 +11,41 @@
   var $ = function (id) { return document.getElementById(id); };
 
   var MODES = [
-    { id: "puzzle", name: "Puzzle", blurb: "Word Puzzle: drag words on a grid. Classic, Rush, Zen, Challenge." },
-    { id: "ladder", name: "Ladder", blurb: "Change one letter at a time to reach the end word." },
-    { id: "scrabble", name: "Scrabble", blurb: "Rack of tiles with point values. Play words to hit the target score." },
-    { id: "guess", name: "Guess", blurb: "Wordle-style: green right spot, amber wrong spot, grey absent." },
-    { id: "blanks", name: "Blanks", blurb: "Reveal the word letter by letter." }
+    {
+      id: "puzzle",
+      name: "Puzzle",
+      mark: "P",
+      tag: "Signature",
+      blurb: "Drag letters on a grid. Classic, Rush, Zen, or Challenge."
+    },
+    {
+      id: "ladder",
+      name: "Ladder",
+      mark: "L",
+      tag: "Path",
+      blurb: "Change one letter at a time to climb to the end word."
+    },
+    {
+      id: "scrabble",
+      name: "Scrabble",
+      mark: "S",
+      tag: "Tiles",
+      blurb: "Play high-scoring words from a seven-tile rack."
+    },
+    {
+      id: "guess",
+      name: "Guess",
+      mark: "G",
+      tag: "Colours",
+      blurb: "Green, amber, grey — crack the secret word."
+    },
+    {
+      id: "blanks",
+      name: "Blanks",
+      mark: "B",
+      tag: "Letters",
+      blurb: "Fill the blanks before you run out of misses."
+    }
   ];
 
   /** Full how-to steps for each start menu — simple English. */
@@ -304,30 +334,156 @@
 
   /* ---------------------------------------------------------------- hub */
 
+  function buildModePreview(modeId) {
+    var wrap = document.createElement("span");
+    wrap.className = "mode-preview mode-preview-" + modeId;
+    wrap.setAttribute("aria-hidden", "true");
+
+    if (modeId === "puzzle") {
+      var cells = "W O R D P L A Y G A M E S U N T".split(" ");
+      var path = { 0: 1, 1: 1, 2: 1, 3: 1 };
+      cells.forEach(function (ch, i) {
+        var cell = document.createElement("span");
+        cell.className = "mp-cell" + (path[i] ? " on" : "");
+        cell.textContent = ch;
+        wrap.appendChild(cell);
+      });
+      return wrap;
+    }
+
+    if (modeId === "ladder") {
+      ["CAT", "COT", "DOT"].forEach(function (word, row) {
+        var line = document.createElement("span");
+        line.className = "mp-ladder-row" + (row === 1 ? " mid" : "");
+        word.split("").forEach(function (ch) {
+          var cell = document.createElement("span");
+          cell.className = "mp-cell";
+          cell.textContent = ch;
+          line.appendChild(cell);
+        });
+        wrap.appendChild(line);
+      });
+      return wrap;
+    }
+
+    if (modeId === "scrabble") {
+      [
+        { ch: "Q", v: "10" },
+        { ch: "U", v: "1" },
+        { ch: "I", v: "1" },
+        { ch: "Z", v: "10" }
+      ].forEach(function (tile) {
+        var t = document.createElement("span");
+        t.className = "mp-tile";
+        t.innerHTML = '<span class="mp-tile-l"></span><span class="mp-tile-v"></span>';
+        t.querySelector(".mp-tile-l").textContent = tile.ch;
+        t.querySelector(".mp-tile-v").textContent = tile.v;
+        wrap.appendChild(t);
+      });
+      return wrap;
+    }
+
+    if (modeId === "guess") {
+      [
+        ["hit", "near", "miss", "hit", "miss"],
+        ["typed", "typed", "cursor", "", ""]
+      ].forEach(function (row) {
+        var line = document.createElement("span");
+        line.className = "mp-guess-row";
+        row.forEach(function (kind) {
+          var cell = document.createElement("span");
+          cell.className = "mp-gcell" + (kind ? " " + kind : "");
+          if (kind === "hit") cell.textContent = "A";
+          else if (kind === "near") cell.textContent = "R";
+          else if (kind === "miss") cell.textContent = "O";
+          else if (kind === "typed") cell.textContent = "S";
+          else if (kind === "cursor") cell.textContent = "";
+          line.appendChild(cell);
+        });
+        wrap.appendChild(line);
+      });
+      return wrap;
+    }
+
+    // blanks
+    "C_A_".split("").forEach(function (ch) {
+      var slot = document.createElement("span");
+      slot.className = "mp-blank" + (ch === "_" ? " empty" : " filled");
+      slot.textContent = ch === "_" ? "" : ch;
+      wrap.appendChild(slot);
+    });
+    return wrap;
+  }
+
   function renderHub() {
     var grid = $("mode-grid");
     grid.innerHTML = "";
     var data = loadData();
-    MODES.forEach(function (mode) {
+    MODES.forEach(function (mode, index) {
       var stats = data.stats[mode.id] || {};
       var btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "mode-card";
-      btn.setAttribute("aria-label", mode.name);
+      btn.className = "mode-card mode-" + mode.id + (mode.id === "puzzle" ? " mode-featured" : "");
+      btn.style.setProperty("--stagger", String(index));
+      btn.setAttribute("aria-label", mode.name + ". " + mode.blurb);
+
+      var top = document.createElement("span");
+      top.className = "mode-card-top";
+
+      var mark = document.createElement("span");
+      mark.className = "mode-mark";
+      mark.setAttribute("aria-hidden", "true");
+      mark.textContent = mode.mark || mode.name.charAt(0);
+
+      var tag = document.createElement("span");
+      tag.className = "mode-tag";
+      tag.textContent = mode.tag || "Play";
+
+      top.appendChild(mark);
+      top.appendChild(tag);
+
+      var body = document.createElement("span");
+      body.className = "mode-card-body";
+
+      var copy = document.createElement("span");
+      copy.className = "mode-card-copy";
+
       var name = document.createElement("span");
       name.className = "mode-name";
       name.textContent = mode.name;
+
       var blurb = document.createElement("span");
       blurb.className = "mode-blurb";
       blurb.textContent = mode.blurb;
+
+      copy.appendChild(name);
+      copy.appendChild(blurb);
+
+      var preview = buildModePreview(mode.id);
+
+      body.appendChild(copy);
+      body.appendChild(preview);
+
+      var foot = document.createElement("span");
+      foot.className = "mode-card-foot";
+
       var meta = document.createElement("span");
-      meta.className = "meta-line";
+      meta.className = "mode-meta";
       var played = stats.played || 0;
       var won = stats.won || 0;
-      meta.textContent = played ? (won + " cleared · " + played + " played") : "Not played yet";
-      btn.appendChild(name);
-      btn.appendChild(blurb);
-      btn.appendChild(meta);
+      meta.textContent = played ? (won + " cleared · " + played + " played") : "Tap to play";
+
+      var go = document.createElement("span");
+      go.className = "mode-go";
+      go.setAttribute("aria-hidden", "true");
+      go.textContent = "Play";
+
+      foot.appendChild(meta);
+      foot.appendChild(go);
+
+      btn.appendChild(top);
+      btn.appendChild(body);
+      btn.appendChild(foot);
       btn.addEventListener("click", function () { openMode(mode.id); });
       grid.appendChild(btn);
     });
