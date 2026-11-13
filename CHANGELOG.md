@@ -2,6 +2,11 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.7 — 2026-11-13
+
+### Changed
+- Version bump for GitHub Pages publish (ENABLE1-only dictionary, review fixes, offensive-term scrub, credit link).
+
 ## 0.3.6 — 2026-11-13
 
 ### Changed

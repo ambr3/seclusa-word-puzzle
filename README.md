@@ -4,7 +4,7 @@ Offline Seclusa word games in one PWA. **Puzzle** (Classic / Rush / Zen / Challe
 
 No clues, no accounts, no network after load (`connect-src 'none'`).
 
-**Version:** 0.3.6  
+**Version:** 0.3.7  
 **Source:** [github.com/ambr3/seclusa-word-puzzle](https://github.com/ambr3/seclusa-word-puzzle)
 
 ## Documentation
