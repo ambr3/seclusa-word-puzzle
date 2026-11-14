@@ -2,6 +2,11 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.3.8 — 2026-11-14
+
+### Added
+- `apple-mobile-web-app-status-bar-style` set to `black` for a solid iOS home-screen status bar.
+
 ## 0.3.7 — 2026-11-13
 
 ### Changed
