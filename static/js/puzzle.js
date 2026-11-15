@@ -128,9 +128,10 @@
       var needed = PL.xpNeededFor(prog.level);
       root.innerHTML =
         '<div class="pz-menu mode-page">' +
-          '<section class="mode-hero" aria-label="Puzzle">' +
+          '<section class="mode-hero mode-hero-enter" aria-label="Puzzle">' +
+            '<div class="mode-hero-accent" aria-hidden="true"></div>' +
             '<div class="mode-card-top">' +
-              '<span class="mode-mark" aria-hidden="true">P</span>' +
+              '<span class="mode-mark mode-mark-lg" aria-hidden="true">P</span>' +
               '<span class="mode-tag">Signature</span>' +
             '</div>' +
             '<div class="mode-card-body">' +
@@ -668,7 +669,7 @@
       var won = false;
       if (submode === "challenge") won = lastEndReason === "goal";
       else if (submode === "zen") won = lastEndReason === "zen" && wordCount > 0;
-      else won = lastEndReason === "timeout" && wordCount > 0;
+      /* Classic / Rush: timeout is time up, not a clear. */
 
       var xpGain = Math.round(score * PL.SUBMODES[submode].xpMult);
       var xpResult = PL.addXp(data.puzzle.progress, xpGain);

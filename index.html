@@ -43,10 +43,16 @@
 </header>
 
 <div id="hub-screen" class="screen">
-  <main class="wrap hub-wrap">
+  <main class="wrap hub-wrap stationery-hub">
     <section class="hub-hero" aria-label="Welcome">
-      <p class="hub-kicker">Seclusa</p>
-      <h2 class="hub-title">Word Puzzle</h2>
+      <div class="hub-brand-row">
+        <span class="hub-brand-mark" aria-hidden="true">W</span>
+        <div class="hub-brand-copy">
+          <p class="hub-kicker">Seclusa</p>
+          <h2 class="hub-title">Word Puzzle</h2>
+          <p class="hub-subbrand">Word Puzzle Hub</p>
+        </div>
+      </div>
       <p class="hub-lede">Five word games. One dictionary. Everything stays on this device — no clues, no accounts, no network after load.</p>
       <p class="status" id="hub-status" role="status" aria-live="polite"></p>
     </section>
@@ -54,44 +60,56 @@
     <p class="hub-section-label">Choose a game</p>
     <div class="mode-grid" id="mode-grid"></div>
 
-    <div class="panel hub-settings mt18">
-      <div class="section">
-        <h2>Settings</h2>
-        <p class="muted">Applies to every game.</p>
+    <div class="hub-settings mt18 stationery-settings" id="hub-settings">
+      <p class="hub-settings-title">Settings</p>
+      <p class="muted hub-settings-lede">Applies to every game.</p>
 
-        <div class="settings-block">
-          <p class="theme-section-label">Theme</p>
-          <div class="theme-mode-row" role="group" aria-label="Colour mode" id="hub-theme-row">
-            <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="system" aria-checked="false">System</button>
-            <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="light" aria-checked="false">Light</button>
-            <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="dark" aria-checked="false">Dark</button>
-          </div>
+      <div class="settings-card">
+        <p class="theme-section-label">Theme</p>
+        <p class="muted settings-card-hint">Choose your app appearance.</p>
+        <div class="theme-mode-row theme-segment" role="group" aria-label="Colour mode" id="hub-theme-row">
+          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="system" aria-checked="false">System</button>
+          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="light" aria-checked="false">Light</button>
+          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="dark" aria-checked="false">Dark</button>
         </div>
+      </div>
 
-        <div class="settings-block">
-          <p class="theme-section-label">Dictionary</p>
-          <p class="muted nomargin" id="dict-stats"></p>
-          <p class="muted settings-note" id="dict-disclaimer">
-            Words from
-            <a href="https://en.wikipedia.org/wiki/ENABLE_(word_list)" rel="noopener noreferrer">ENABLE1</a>
-            (public domain — not an open-source licence), stored on this device (lengths 2–12).
-            Offensive terms removed as far as practicable. Please report any that remain.
-          </p>
-        </div>
+      <div class="settings-card">
+        <p class="theme-section-label">Dictionary</p>
+        <ul class="dict-stat-rows" aria-label="Dictionary size">
+          <li><span class="dict-stat-key">Common words</span><span class="dict-stat-val" id="dict-common">0</span></li>
+          <li><span class="dict-stat-key">Accepted words</span><span class="dict-stat-val" id="dict-all">0</span></li>
+          <li><span class="dict-stat-key">Stored</span><span class="dict-stat-val">On this device</span></li>
+        </ul>
+        <p class="muted settings-note" id="dict-disclaimer">
+          Words from
+          <a href="https://en.wikipedia.org/wiki/ENABLE_(word_list)" rel="noopener noreferrer">ENABLE1</a>
+          (public domain — not an open-source licence), lengths 2–12.
+          Offensive terms removed as far as practicable. Please report any that remain.
+        </p>
+        <p class="visually-hidden" id="dict-stats"></p>
+      </div>
 
-        <div class="settings-block">
-          <p class="theme-section-label">Help</p>
-          <button type="button" class="btn" id="btn-instructions">Show how to play every game</button>
-          <div class="how-box mt12" id="hub-instructions" hidden></div>
-          <p class="muted settings-note">Full docs: INSTRUCTIONS.md in this folder.</p>
-        </div>
+      <div class="settings-card settings-card-help">
+        <button type="button" class="settings-help-row" id="btn-instructions" aria-expanded="false" aria-controls="hub-instructions">
+          <span class="settings-help-mark" aria-hidden="true">?</span>
+          <span class="settings-help-copy">
+            <span class="settings-help-title">Help</span>
+            <span class="settings-help-sub">How to play every game</span>
+          </span>
+          <span class="settings-help-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="how-box mt12" id="hub-instructions" hidden></div>
+        <p class="muted settings-note">Full docs: INSTRUCTIONS.md in this folder.</p>
+      </div>
 
-        <div class="settings-block">
-          <p class="theme-section-label">Data</p>
-          <div class="buttonrow">
-            <button type="button" class="btn danger" id="btn-clear">Erase saved data</button>
-          </div>
+      <div class="settings-card settings-card-danger">
+        <p class="theme-section-label">Erase saved data</p>
+        <p class="muted settings-card-hint">Clear all saved progress, scores, and preferences.</p>
+        <div class="buttonrow">
+          <button type="button" class="btn stationery-erase wide" id="btn-clear">Erase all data</button>
         </div>
+        <p class="muted settings-note danger-note">This action cannot be undone.</p>
       </div>
     </div>
 
@@ -100,7 +118,7 @@
         <a href="https://github.com/ambr3/seclusa-word-puzzle" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
         · Made with <span class="heart" role="img" aria-label="love">❤️</span>
         <span class="flag" role="img" aria-label="United Kingdom">🇬🇧</span>
-        · v0.3.9
+        · v0.4.0
       </p>
     </footer>
   </main>

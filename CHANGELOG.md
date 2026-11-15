@@ -2,6 +2,20 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.4.0 — 2026-11-15
+
+### Changed
+- Stationery hub UI (peach lined paper in Light, cream settings cards, segmented Theme control).
+- Stronger per-mode heroes and play chrome; mobile hub hides side previews on narrow cards.
+
+### Fixed
+- Help toggle no longer destroys the stationery Help button markup.
+- Erase button label stays “Erase all data” through arm/disarm.
+- Classic/Rush timeout no longer counts as a hub “cleared” win.
+- Featured Puzzle preview no longer hidden by the narrow-card container query.
+- Mode cards no longer force cream backgrounds in dark mode.
+- Erase theme reset relies on Theme.set("system") instead of stripping data-theme afterward.
+
 ## 0.3.9 — 2026-11-14
 
 ### Changed

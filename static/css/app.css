@@ -449,6 +449,8 @@ button.accentpill:active { transform: scale(.96); }
   text-align: left;
   overflow: hidden;
   isolation: isolate;
+  container-type: inline-size;
+  container-name: mode-card;
   opacity: 1;
   box-shadow:
     0 1px 0 color-mix(in srgb, var(--mode) 22%, transparent) inset,
@@ -573,6 +575,7 @@ button.accentpill:active { transform: scale(.96); }
   gap: 14px;
   width: 100%;
   flex: 1;
+  min-width: 0;
   min-height: 0;
 }
 
@@ -581,7 +584,7 @@ button.accentpill:active { transform: scale(.96); }
   flex-direction: column;
   gap: 8px;
   min-width: 0;
-  flex: 1;
+  flex: 1 1 auto;
 }
 
 .mode-card .mode-name {
@@ -634,7 +637,7 @@ button.accentpill:active { transform: scale(.96); }
 
 /* Mini in-card game previews */
 .mode-preview {
-  flex: none;
+  flex: 0 0 auto;
   display: grid;
   place-content: center;
   gap: 3px;
@@ -644,6 +647,7 @@ button.accentpill:active { transform: scale(.96); }
   background: color-mix(in srgb, var(--mode) 10%, var(--surface));
   box-shadow: 0 1px 0 color-mix(in srgb, #fff 10%, transparent) inset;
   pointer-events: none;
+  max-width: 100%;
 }
 
 .mode-preview-puzzle {
@@ -791,9 +795,40 @@ html[data-theme="dark"] .mode-go {
   }
 }
 
-@media (max-width: 380px) {
+/* Hide side previews when the card itself is too narrow (2-col mobile). */
+@container mode-card (max-width: 300px) {
   .mode-card:not(.mode-featured) .mode-preview {
     display: none;
+  }
+  .mode-card:not(.mode-featured) .mode-card-body {
+    display: block;
+  }
+}
+
+/* Fallback when container queries are unavailable. */
+@supports not (container-type: inline-size) {
+  @media (max-width: 559px) {
+    .mode-card:not(.mode-featured) .mode-preview {
+      display: none;
+    }
+    .mode-card:not(.mode-featured) .mode-card-body {
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 559px) {
+  .mode-card:not(.mode-featured) .mode-preview {
+    display: none;
+  }
+  .mode-card:not(.mode-featured) .mode-card-body {
+    display: block;
+  }
+  .mode-featured .mode-card-body {
+    flex-wrap: wrap;
+  }
+  .mode-featured .mode-preview {
+    margin-left: auto;
   }
 }
 
@@ -1556,3 +1591,903 @@ html[data-theme="dark"] #play-screen.mode-theme .theme-chip.active {
 .made-with a:hover { color: var(--text); }
 .made-with .heart,
 .made-with .flag { margin: 0 1px; }
+
+
+/* =================================================================
+ * Arcade Tiles overhaul — stronger hub + per-mode identity
+ * Keeps Seclusa orange lines / System-Light-Dark; no new fonts.
+ * ================================================================= */
+
+.hub-hero {
+  padding: 26px 20px 24px;
+  border-width: 1.5px;
+  border-color: color-mix(in srgb, var(--warm) 40%, var(--border));
+  border-radius: calc(var(--radius) + 8px);
+  background:
+    radial-gradient(ellipse 100% 90% at 0% 0%, var(--warm-tint), transparent 58%),
+    radial-gradient(ellipse 80% 70% at 100% 110%, color-mix(in srgb, var(--warm) 12%, transparent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--warm) 6%, var(--surface)) 0%, var(--surface) 100%);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--warm) 16%, transparent),
+    0 18px 40px color-mix(in srgb, var(--warm) 14%, transparent),
+    var(--shadow);
+}
+
+.hub-hero-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: linear-gradient(180deg, var(--warm), var(--warm-strong));
+  border-radius: calc(var(--radius) + 8px) 0 0 calc(var(--radius) + 8px);
+  z-index: 2;
+}
+
+.hub-title {
+  font-size: clamp(32px, 8vw, 42px);
+  background: linear-gradient(105deg, var(--text) 20%, var(--warm-strong) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@supports not (background-clip: text) {
+  .hub-title { color: var(--text); background: none; }
+}
+
+.hub-lede {
+  font-size: 15px;
+  max-width: 38em;
+}
+
+.hub-section-label {
+  margin: 4px 0 14px;
+  font-size: 12px;
+  letter-spacing: .16em;
+  color: var(--warm-strong);
+}
+
+.mode-grid {
+  gap: 14px;
+}
+
+.mode-card {
+  min-height: 188px;
+  padding: 18px;
+  border-radius: calc(var(--radius) + 8px);
+  border-width: 2px;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--mode) 28%, transparent) 0%, transparent 52%),
+    linear-gradient(0deg, color-mix(in srgb, var(--mode) 6%, var(--surface)) 0%, var(--surface) 100%);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 30%, transparent) inset,
+    0 14px 32px color-mix(in srgb, var(--mode) 16%, transparent),
+    var(--shadow);
+}
+
+.mode-card::after {
+  opacity: .32;
+  width: 64%;
+  height: 78%;
+}
+
+.mode-featured {
+  min-height: 176px;
+  padding: 20px;
+}
+
+.mode-mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  font-size: 20px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 32%, transparent) inset,
+    0 10px 20px color-mix(in srgb, var(--mode) 40%, transparent);
+}
+
+.mode-mark-lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  font-size: 24px;
+}
+
+.mode-tag {
+  padding: 5px 11px;
+  font-size: 10.5px;
+  letter-spacing: .1em;
+}
+
+.mode-card .mode-name {
+  font-size: 22px;
+}
+.mode-featured .mode-name { font-size: 26px; }
+
+.mode-go {
+  padding: 8px 14px;
+  font-size: 12px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 24%, transparent) inset,
+    0 6px 14px color-mix(in srgb, var(--mode) 30%, transparent);
+}
+
+.mode-preview {
+  padding: 10px;
+  border-radius: 14px;
+  border-width: 1.5px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 12%, transparent) inset,
+    0 8px 18px color-mix(in srgb, var(--mode) 12%, transparent);
+}
+
+.arcade-settings {
+  border-radius: calc(var(--radius) + 6px);
+  border-color: color-mix(in srgb, var(--warm) 22%, var(--border));
+  box-shadow:
+    0 12px 28px color-mix(in srgb, var(--warm) 8%, transparent),
+    var(--shadow);
+}
+
+.arcade-settings .section > h2 {
+  font-size: 13px;
+  letter-spacing: .08em;
+  color: var(--warm-strong);
+}
+
+.hub-settings .theme-chip {
+  min-height: 44px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+.hub-settings .theme-chip[aria-checked="true"],
+.hub-settings .theme-chip.active {
+  background: var(--warm);
+  border-color: var(--warm);
+  color: #fff;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--warm) 28%, transparent);
+}
+
+.mode-hero {
+  padding: 0 0 18px;
+  border-width: 2px;
+  border-radius: calc(var(--radius) + 10px);
+  gap: 0;
+  background:
+    linear-gradient(165deg, color-mix(in srgb, var(--mode) 30%, transparent) 0%, transparent 50%),
+    var(--surface);
+}
+
+.mode-hero-accent {
+  height: 8px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--mode), color-mix(in srgb, var(--mode) 40%, transparent));
+  border-radius: calc(var(--radius) + 8px) calc(var(--radius) + 8px) 0 0;
+  margin: 0;
+}
+
+.mode-hero .mode-card-top,
+.mode-hero .mode-card-body {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+.mode-hero .mode-card-top {
+  padding-top: 16px;
+}
+.mode-hero .mode-card-body {
+  padding-bottom: 4px;
+}
+
+.mode-hero .mode-name {
+  font-size: clamp(30px, 7vw, 38px);
+}
+
+.mode-play-btn.btn.primary {
+  min-height: 52px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 28%, transparent) inset,
+    0 12px 24px color-mix(in srgb, var(--mode) 32%, transparent);
+}
+
+.mode-start {
+  border-radius: calc(var(--radius) + 6px);
+  border-width: 1.5px;
+  border-color: color-mix(in srgb, var(--mode) 32%, var(--border));
+  overflow: hidden;
+}
+
+.mode-start .how-steps li::marker {
+  color: var(--mode);
+}
+
+.mode-start .statstrip {
+  border-color: color-mix(in srgb, var(--mode) 28%, var(--border));
+  background: color-mix(in srgb, var(--mode) 10%, var(--surface-2));
+}
+
+#play-screen.mode-theme .play-toolbar {
+  padding: 4px 0 14px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-bottom-color: color-mix(in srgb, var(--mode) 40%, var(--border));
+}
+
+#play-screen.mode-theme .play-title {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.mode-play-root.is-playing {
+  animation: play-shell-in .35s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+#play-screen.mode-scrabble .scrabble-tile {
+  background: color-mix(in srgb, var(--mode) 22%, var(--surface));
+  border-color: color-mix(in srgb, var(--mode) 50%, var(--border));
+  border-radius: 10px;
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 22%, transparent) inset,
+    0 6px 12px color-mix(in srgb, var(--mode) 18%, transparent);
+}
+#play-screen.mode-scrabble .scrabble-word {
+  border: 2px dashed color-mix(in srgb, var(--mode) 40%, var(--border));
+  background: color-mix(in srgb, var(--mode) 8%, var(--surface));
+  border-radius: 14px;
+  min-height: 64px;
+}
+
+#play-screen.mode-guess .guess-board {
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1.5px solid color-mix(in srgb, var(--mode) 28%, var(--border));
+  background: color-mix(in srgb, var(--mode) 8%, var(--surface-2));
+  max-width: 360px;
+}
+#play-screen.mode-guess .guess-cell {
+  border-radius: 8px;
+  font-size: 22px;
+}
+#play-screen.mode-guess .kb-key {
+  border-radius: 8px;
+  min-height: 44px;
+  box-shadow: 0 1px 0 color-mix(in srgb, #fff 10%, transparent) inset;
+}
+
+#play-screen.mode-ladder .ladder-steps {
+  gap: 10px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1.5px solid color-mix(in srgb, var(--mode) 30%, var(--border));
+  background: color-mix(in srgb, var(--mode) 8%, var(--surface-2));
+}
+#play-screen.mode-ladder .ladder-step input {
+  width: 44px;
+  height: 48px;
+  border-radius: 10px;
+  border-width: 1.5px;
+}
+#play-screen.mode-ladder .ladder-step input:focus {
+  border-color: var(--mode);
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mode) 25%, transparent);
+}
+#play-screen.mode-ladder .ladder-step input.locked {
+  background: color-mix(in srgb, var(--mode) 16%, var(--surface-2));
+  border-color: color-mix(in srgb, var(--mode) 35%, var(--border));
+  color: var(--mode-strong);
+}
+
+#play-screen.mode-blanks .blanks-word {
+  gap: 10px;
+  padding: 16px 12px;
+  border-radius: 16px;
+  border: 1.5px solid color-mix(in srgb, var(--mode) 30%, var(--border));
+  background: color-mix(in srgb, var(--mode) 8%, var(--surface-2));
+}
+#play-screen.mode-blanks .blank-slot {
+  min-width: 32px;
+  font-size: 24px;
+  border-bottom-width: 3px;
+  border-bottom-color: color-mix(in srgb, var(--mode) 55%, var(--text));
+}
+#play-screen.mode-blanks .blank-slot.hit {
+  color: var(--mode-strong);
+  border-bottom-color: var(--mode);
+}
+
+#play-screen.mode-puzzle .pz-hud {
+  padding: 10px 8px;
+  border-radius: 14px;
+  border: 1.5px solid color-mix(in srgb, var(--mode) 28%, var(--border));
+  background: color-mix(in srgb, var(--mode) 10%, var(--surface-2));
+}
+#play-screen.mode-puzzle .pz-cell {
+  border-radius: 12px;
+  border-width: 1.5px;
+  box-shadow: 0 1px 0 color-mix(in srgb, #fff 12%, transparent) inset;
+}
+#play-screen.mode-puzzle .pz-cell.selected {
+  background: var(--mode);
+  border-color: var(--mode);
+  color: #fff;
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--mode) 35%, transparent);
+}
+#play-screen.mode-puzzle .pz-path line {
+  stroke: var(--mode);
+  stroke-width: 5;
+}
+#play-screen.mode-puzzle .pz-current {
+  color: var(--mode-strong);
+}
+#play-screen.mode-puzzle .pz-rush-fill {
+  background: color-mix(in srgb, var(--mode) 28%, transparent);
+}
+#play-screen.mode-puzzle .pz-found-list li {
+  border-color: color-mix(in srgb, var(--mode) 28%, var(--border));
+  background: color-mix(in srgb, var(--mode) 10%, var(--surface-2));
+}
+
+#play-screen.mode-theme .letter-tile {
+  border-radius: 12px;
+  border-width: 1.5px;
+}
+#play-screen.mode-theme .letter-tile.selected {
+  outline: 2px solid var(--mode);
+  background: color-mix(in srgb, var(--mode) 14%, var(--surface));
+}
+
+#play-screen.mode-theme .kb-key:not(.hit):not(.near):not(.miss):active {
+  transform: scale(.94);
+  background: color-mix(in srgb, var(--mode) 12%, var(--surface));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mode-preview {
+    animation: preview-pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes preview-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  .mode-hero-enter {
+    animation: mode-hero-in .5s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  @keyframes mode-hero-in {
+    from { transform: translateY(16px) scale(.98); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+
+  @keyframes play-shell-in {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+
+  .mode-card:hover .mode-preview {
+    animation: none;
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mode-preview,
+  .mode-hero-enter,
+  .mode-play-root.is-playing,
+  .mode-card {
+    animation: none !important;
+  }
+}
+
+html[data-theme="dark"] .hub-title {
+  background: linear-gradient(105deg, #fff 15%, var(--warm) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+html[data-theme="dark"] .hub-settings .theme-chip[aria-checked="true"],
+html[data-theme="dark"] .hub-settings .theme-chip.active {
+  color: #0a0a0a;
+}
+html[data-theme="dark"] #play-screen.mode-puzzle .pz-cell.selected {
+  color: #0a0a0a;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .hub-title {
+    background: linear-gradient(105deg, #fff 15%, var(--warm) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  html:not([data-theme="light"]) .hub-settings .theme-chip[aria-checked="true"],
+  html:not([data-theme="light"]) .hub-settings .theme-chip.active {
+    color: #0a0a0a;
+  }
+  html:not([data-theme="light"]) #play-screen.mode-puzzle .pz-cell.selected {
+    color: #0a0a0a;
+  }
+}
+
+
+/* =================================================================
+ * Stationery direction (concept 09) — lined paper + cream cards
+ * Softens arcade glow; keeps Seclusa lines / System-Light-Dark.
+ * ================================================================= */
+
+.stationery-hub .hub-hero {
+  padding: 22px 20px 20px;
+  border: 1px solid color-mix(in srgb, var(--warm) 22%, var(--border));
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--warm) 4%, var(--surface));
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 40%, transparent) inset,
+    0 10px 24px color-mix(in srgb, var(--warm) 8%, transparent),
+    var(--shadow);
+}
+
+.stationery-hub .hub-hero-accent { display: none; }
+
+.stationery-hub .hub-kicker {
+  font-size: 13px;
+  letter-spacing: .12em;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.stationery-hub .hub-title {
+  margin: 2px 0 4px;
+  font-size: clamp(28px, 7vw, 36px);
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--text);
+}
+
+.hub-subbrand {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--warm-strong);
+}
+
+.stationery-hub .hub-section-label {
+  color: var(--warm-strong);
+  letter-spacing: .14em;
+}
+
+.stationery-hub .mode-card {
+  border-width: 1.5px;
+  border-radius: 18px;
+  background:
+    linear-gradient(165deg, color-mix(in srgb, var(--mode) 16%, transparent) 0%, transparent 55%),
+    var(--surface);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 50%, transparent) inset,
+    0 8px 20px color-mix(in srgb, var(--mode) 10%, transparent),
+    var(--shadow);
+}
+
+.stationery-hub .mode-card::after {
+  opacity: .16;
+}
+
+.stationery-hub .mode-go {
+  box-shadow: 0 1px 0 color-mix(in srgb, #fff 24%, transparent) inset;
+}
+
+.stationery-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hub-settings-title {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.hub-settings-lede {
+  margin: 4px 0 6px;
+}
+
+.settings-card {
+  padding: 16px 16px 18px;
+  border: 1px solid color-mix(in srgb, var(--warm) 18%, var(--border));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--warm) 3%, var(--surface));
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 45%, transparent) inset,
+    0 8px 18px color-mix(in srgb, var(--warm) 7%, transparent),
+    var(--shadow);
+}
+
+.settings-card .theme-section-label {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: var(--text);
+}
+
+.settings-card-hint {
+  margin: 0 0 12px;
+  font-size: 13px;
+}
+
+.settings-card .settings-note {
+  margin: 12px 0 0;
+}
+
+.theme-segment {
+  display: flex;
+  gap: 0;
+  padding: 4px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--warm) 8%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--warm) 16%, var(--border));
+}
+
+.theme-segment .theme-chip {
+  flex: 1 1 0;
+  min-height: 42px;
+  border: none;
+  border-radius: 11px;
+  background: transparent;
+  font-weight: 700;
+  color: var(--text-dim);
+  box-shadow: none;
+}
+
+.theme-segment .theme-chip:hover {
+  border: none;
+  color: var(--text);
+}
+
+.theme-segment .theme-chip[aria-checked="true"],
+.theme-segment .theme-chip.active {
+  background: var(--warm);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--warm) 30%, transparent);
+}
+
+.settings-help-btn {
+  width: 100%;
+  justify-content: space-between;
+  min-height: 46px;
+  border-radius: 12px;
+  border-color: color-mix(in srgb, var(--warm) 22%, var(--border));
+  background: var(--surface);
+  font-weight: 650;
+}
+
+.settings-card-danger .btn.danger {
+  min-height: 48px;
+  border-radius: 12px;
+  font-weight: 750;
+}
+
+.danger-note {
+  color: var(--danger) !important;
+  font-weight: 600;
+}
+
+/* Mode heroes / play stay mode-coloured but on cream stationery chrome */
+.mode-hero {
+  border-radius: 18px;
+  border-width: 1.5px;
+  background:
+    linear-gradient(165deg, color-mix(in srgb, var(--mode) 18%, transparent) 0%, transparent 52%),
+    var(--surface);
+  box-shadow:
+    0 1px 0 color-mix(in srgb, #fff 40%, transparent) inset,
+    0 10px 22px color-mix(in srgb, var(--mode) 10%, transparent),
+    var(--shadow);
+}
+
+.mode-start {
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--warm) 2%, var(--surface));
+}
+
+.mode-play-btn.btn.primary {
+  border-radius: 14px;
+}
+
+html[data-theme="dark"] .stationery-hub .hub-title {
+  background: none;
+  color: var(--text);
+}
+html[data-theme="dark"] .settings-card,
+html[data-theme="dark"] .stationery-hub .hub-hero {
+  background: color-mix(in srgb, var(--warm) 6%, var(--surface-2));
+}
+html[data-theme="dark"] .theme-segment .theme-chip[aria-checked="true"],
+html[data-theme="dark"] .theme-segment .theme-chip.active {
+  color: #0a0a0a;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .stationery-hub .hub-title {
+    background: none;
+    color: var(--text);
+  }
+  html:not([data-theme="light"]) .settings-card,
+  html:not([data-theme="light"]) .stationery-hub .hub-hero {
+    background: color-mix(in srgb, var(--warm) 6%, var(--surface-2));
+  }
+  html:not([data-theme="light"]) .theme-segment .theme-chip[aria-checked="true"],
+  html:not([data-theme="light"]) .theme-segment .theme-chip.active {
+    color: #0a0a0a;
+  }
+}
+
+
+/* =================================================================
+ * Stationery v2 — match concept 09 (peach lined paper + cream cards)
+ * App-only overrides. View in Light for the mockup look.
+ * ================================================================= */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Peach notebook paper in Light */
+html[data-theme="light"] {
+  --bg: #fff1e6;
+  --surface: #fffaf5;
+  --surface-2: #fff6ee;
+  --surface-3: #ffecd9;
+  --border: #efd2b8;
+  --border-strong: #e0b48e;
+  --grid-line: rgba(196, 94, 18, 0.22);
+  --grid-wash: rgba(196, 94, 18, 0.16);
+  --shadow: 0 8px 22px rgba(154, 74, 12, 0.1), 0 1px 2px rgba(154, 74, 12, 0.06);
+}
+
+html[data-theme="light"] body::before {
+  background-color: #fff1e6;
+  background-image:
+    linear-gradient(rgba(196, 94, 18, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(185, 28, 28, 0.22) 2px, transparent 2px),
+    radial-gradient(ellipse 90% 55% at 8% -8%, rgba(196, 94, 18, 0.18), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 100% 100%, rgba(196, 94, 18, 0.12), transparent 50%);
+  background-size: 100% 30px, 100% 100%, auto, auto;
+  background-position: 0 0, 36px 0, 0 0, 0 0;
+}
+
+body:has(.stationery-hub) .topbar {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--warm) 18%, var(--border));
+  backdrop-filter: blur(8px);
+}
+
+html[data-theme="light"] .brand {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--warm-strong);
+}
+
+.hub-brand-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.hub-brand-mark {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: var(--warm);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 850;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--warm) 35%, transparent);
+}
+
+.hub-brand-copy { min-width: 0; }
+
+.stationery-hub .hub-hero {
+  background: #fffaf5;
+  border: 1px solid color-mix(in srgb, var(--warm) 20%, var(--border));
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+html[data-theme="light"] .stationery-hub .hub-hero {
+  background: #fffaf5;
+}
+
+.stationery-hub .hub-kicker {
+  margin: 0 0 2px;
+  color: var(--text);
+  font-size: 15px;
+  letter-spacing: .04em;
+  text-transform: none;
+  font-weight: 850;
+}
+
+.stationery-hub .hub-title {
+  margin: 0;
+  font-size: clamp(26px, 6.5vw, 34px);
+  color: var(--text);
+  background: none;
+}
+
+.stationery-hub .hub-subbrand {
+  margin: 4px 0 0;
+}
+
+.stationery-hub .mode-card {
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--mode) 12%, transparent) 0%, transparent 50%),
+    var(--surface);
+  border: 1px solid color-mix(in srgb, var(--mode) 28%, var(--border));
+  box-shadow: var(--shadow);
+}
+
+html[data-theme="light"] .stationery-hub .mode-card {
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--mode) 12%, transparent) 0%, transparent 50%),
+    #fffaf5;
+}
+
+.stationery-hub .mode-card::before,
+.stationery-hub .mode-card::after {
+  opacity: .12;
+}
+
+.settings-card {
+  background: #fffaf5;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--warm) 16%, var(--border));
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+html[data-theme="light"] .settings-card {
+  background: #fffaf5;
+}
+
+.dict-stat-rows {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.dict-stat-rows li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--warm) 7%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--warm) 12%, var(--border));
+}
+
+.dict-stat-key {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text-dim);
+}
+
+.dict-stat-val {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.settings-help-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 4px 0;
+  text-align: left;
+}
+
+.settings-help-mark {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--warm) 16%, var(--surface-2));
+  color: var(--warm-strong);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.settings-help-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-help-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.settings-help-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.settings-help-chev {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--warm-strong);
+  font-weight: 300;
+}
+
+.stationery-erase {
+  min-height: 50px;
+  border-radius: 14px;
+  border: 1px solid var(--warm);
+  background: var(--warm);
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--warm) 32%, transparent);
+}
+.stationery-erase:hover { filter: brightness(1.05); }
+
+html[data-theme="light"] .stationery-erase {
+  color: #fff;
+}
+
+.theme-segment {
+  background: #ffe8d6;
+  border-color: color-mix(in srgb, var(--warm) 22%, var(--border));
+}
+
+html[data-theme="light"] .theme-segment {
+  background: #ffe8d6;
+}
+
+html[data-theme="light"] .theme-segment .theme-chip[aria-checked="true"],
+html[data-theme="light"] .theme-segment .theme-chip.active {
+  background: var(--warm);
+  color: #fff;
+}
+
+.hub-settings-title {
+  font-size: 24px;
+}
+
+/* Soften arcade pulse on stationery */
+.stationery-hub .mode-preview {
+  animation: none;
+}

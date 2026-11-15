@@ -302,6 +302,7 @@
     }
 
     var root = $("play-root");
+    root.className = "mode-play-root" + (state.phase === "play" ? " is-playing" : " is-menu");
     root.innerHTML = "";
 
     if (state.mode.id === "puzzle") {
@@ -505,9 +506,16 @@
     });
 
     var sizes = window.Dict && window.Dict.sizes ? window.Dict.sizes : { common: 0, all: 0 };
-    $("dict-stats").textContent =
-      sizes.common.toLocaleString() + " common words · " +
-      sizes.all.toLocaleString() + " accepted · stored on this device.";
+    var commonEl = $("dict-common");
+    var allEl = $("dict-all");
+    if (commonEl) commonEl.textContent = sizes.common.toLocaleString();
+    if (allEl) allEl.textContent = sizes.all.toLocaleString();
+    var dictStats = $("dict-stats");
+    if (dictStats) {
+      dictStats.textContent =
+        sizes.common.toLocaleString() + " common words · " +
+        sizes.all.toLocaleString() + " accepted · stored on this device.";
+    }
 
     setStatus(
       "hub-status",
@@ -530,13 +538,17 @@
     page.className = "mode-page";
 
     var hero = document.createElement("section");
-    hero.className = "mode-hero";
+    hero.className = "mode-hero mode-hero-enter";
     hero.setAttribute("aria-label", mode.name);
+
+    var accent = document.createElement("div");
+    accent.className = "mode-hero-accent";
+    accent.setAttribute("aria-hidden", "true");
 
     var top = document.createElement("div");
     top.className = "mode-card-top";
     var mark = document.createElement("span");
-    mark.className = "mode-mark";
+    mark.className = "mode-mark mode-mark-lg";
     mark.setAttribute("aria-hidden", "true");
     mark.textContent = mode.mark || mode.name.charAt(0);
     var tag = document.createElement("span");
@@ -560,6 +572,7 @@
     body.appendChild(copy);
     body.appendChild(buildModePreview(mode.id));
 
+    hero.appendChild(accent);
     hero.appendChild(top);
     hero.appendChild(body);
     page.appendChild(hero);
@@ -1225,13 +1238,12 @@
           window.Theme.set("system");
           if (window.Theme.setBackground) window.Theme.setBackground("grid");
           else if (window.Theme.paintBackground) window.Theme.paintBackground();
-        }
-        if (document.documentElement) {
+        } else if (document.documentElement) {
           document.documentElement.removeAttribute("data-theme");
           document.documentElement.setAttribute("data-bg", "grid");
         }
         button.removeAttribute("data-armed");
-        button.textContent = "Erase saved data";
+        button.textContent = "Erase all data";
         paintThemeChrome();
         renderHub();
         toast("Saved data erased.");
@@ -1241,7 +1253,7 @@
       button.textContent = "Tap again to erase";
       window.setTimeout(function () {
         button.removeAttribute("data-armed");
-        button.textContent = "Erase saved data";
+        button.textContent = "Erase all data";
       }, 4000);
     });
 
@@ -1249,9 +1261,11 @@
     var instrBox = $("hub-instructions");
     if (instrBtn && instrBox) {
       instrBtn.addEventListener("click", function () {
+        var helpSub = instrBtn.querySelector(".settings-help-sub");
         if (!instrBox.hidden && instrBox.dataset.filled === "1") {
           instrBox.hidden = true;
-          instrBtn.textContent = "Show how to play every game";
+          instrBtn.setAttribute("aria-expanded", "false");
+          if (helpSub) helpSub.textContent = "How to play every game";
           return;
         }
         instrBox.innerHTML = "";
@@ -1276,7 +1290,8 @@
         });
         instrBox.dataset.filled = "1";
         instrBox.hidden = false;
-        instrBtn.textContent = "Hide how to play";
+        instrBtn.setAttribute("aria-expanded", "true");
+        if (helpSub) helpSub.textContent = "Hide how to play";
       });
     }
 
