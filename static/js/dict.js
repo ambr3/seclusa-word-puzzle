@@ -101,89 +101,11 @@
     return c;
   }
 
-  function neighbors(word, poolSet) {
-    var out = [];
-    var letters = "abcdefghijklmnopqrstuvwxyz";
-    for (var i = 0; i < word.length; i++) {
-      for (var L = 0; L < 26; L++) {
-        var ch = letters[L];
-        if (ch === word[i]) continue;
-        var next = word.slice(0, i) + ch + word.slice(i + 1);
-        if (poolSet[next]) out.push(next);
-      }
-    }
-    return out;
-  }
-
-  function ladderPath(start, end, maxDepth) {
-    if (start === end) return [start];
-    var limit = maxDepth || 8;
-    var pool = Object.create(null);
-    var list = byLenCommon[start.length] || [];
-    for (var i = 0; i < list.length; i++) pool[list[i]] = 1;
-    if (!pool[start] || !pool[end]) return null;
-
-    var queue = [start];
-    var prev = Object.create(null);
-    prev[start] = null;
-    var depth = Object.create(null);
-    depth[start] = 0;
-
-    while (queue.length) {
-      var cur = queue.shift();
-      if (depth[cur] >= limit) continue;
-      var ns = neighbors(cur, pool);
-      for (var j = 0; j < ns.length; j++) {
-        var n = ns[j];
-        if (n in prev) continue;
-        prev[n] = cur;
-        depth[n] = depth[cur] + 1;
-        if (n === end) {
-          var path = [end];
-          var p = end;
-          while (prev[p] != null) {
-            p = prev[p];
-            path.push(p);
-          }
-          path.reverse();
-          return path;
-        }
-        queue.push(n);
-      }
-    }
-    return null;
-  }
-
   /** Normalize easy | medium | hard. */
   function difficultyOf(opts) {
     var d = opts && opts.difficulty;
     if (d === "easy" || d === "hard") return d;
     return "medium";
-  }
-
-  function makeLadder(random, opts) {
-    var diff = difficultyOf(opts);
-    var len = diff === "hard" ? 5 : 4;
-    var minSteps = diff === "easy" ? 2 : 3;
-    var maxSteps = diff === "easy" ? 3 : diff === "medium" ? 5 : 6;
-    var pool = commonOfLength(len);
-    for (var attempt = 0; attempt < 100; attempt++) {
-      var start = pick(pool, random);
-      var end = pick(pool, random);
-      if (!start || !end || start === end) continue;
-      var path = ladderPath(start, end, maxSteps + 1);
-      if (path && path.length - 1 >= minSteps && path.length - 1 <= maxSteps) {
-        return {
-          start: start,
-          end: end,
-          path: path,
-          steps: path.length - 1,
-          wordLen: len,
-          difficulty: diff
-        };
-      }
-    }
-    return null;
   }
 
   /** Classic English Scrabble letter values. */
@@ -223,45 +145,15 @@
     return lens[Math.floor(random() * lens.length)];
   }
 
-  function makeGuess(random, opts) {
-    var diff = difficultyOf(opts);
-    var len = diff === "easy" ? 4 : diff === "medium" ? 5 : 6;
-    var tries = diff === "easy" ? 7 : diff === "medium" ? 6 : 5;
-    var pool = commonOfLength(len);
-    var word = pick(pool, random);
-    return word ? { word: word, wordLen: len, maxTries: tries, difficulty: diff } : null;
-  }
-
   function makeBlanks(random, opts) {
     var diff = difficultyOf(opts);
     var lens = diff === "easy" ? [4, 5] : diff === "medium" ? [5, 6] : [7, 8];
     var misses = diff === "easy" ? 8 : diff === "medium" ? 6 : 4;
     var len = lensesPick(lens, random);
-    var word = pick(commonOfLength(len), random);
+    // Common pool is lengths 4–7 only; hard may ask for 8 from the full list.
+    var word = pick(commonOfLength(len), random) || pick(allOfLength(len), random);
+    if (!word && diff === "hard") word = pick(commonOfLength(7), random);
     return word ? { word: word, maxMisses: misses, difficulty: diff } : null;
-  }
-
-  function scoreGuess(guess, target) {
-    guess = String(guess).toLowerCase();
-    target = String(target).toLowerCase();
-    var result = [];
-    var remain = letterCounts(target);
-    for (var i = 0; i < guess.length; i++) {
-      if (guess[i] === target[i]) {
-        result[i] = "hit";
-        remain[guess[i]]--;
-      } else {
-        result[i] = "miss";
-      }
-    }
-    for (var j = 0; j < guess.length; j++) {
-      if (result[j] === "hit") continue;
-      if (remain[guess[j]] > 0) {
-        result[j] = "near";
-        remain[guess[j]]--;
-      }
-    }
-    return result;
   }
 
   window.Dict = {
@@ -274,13 +166,8 @@
     daySeed: daySeed,
     pick: pick,
     shuffle: shuffle,
-    neighbors: neighbors,
-    ladderPath: ladderPath,
-    makeLadder: makeLadder,
     makeScrabble: makeScrabble,
-    makeGuess: makeGuess,
     makeBlanks: makeBlanks,
-    scoreGuess: scoreGuess,
     tileValue: tileValue,
     sizes: {
       common: COMMON.length,

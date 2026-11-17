@@ -52,14 +52,6 @@ Each game’s start menu shows a full **How to play** list in simple English. Th
 7. Modes: Classic has a timer. Rush gives more time when you find a word. Zen has no timer. Challenge stops after 15 words.
 8. Higher difficulty means a bigger, harder board (1–100).
 
-### Ladder
-
-1. You see a starting word at the top and a finishing word at the bottom.
-2. Fill in the empty middle rows with real words.
-3. Each new word must change only ONE letter from the word above it.
-4. When the chain reaches the finish word, press Check ladder.
-5. Easy = short words, fewer steps. Hard = longer words, more steps.
-
 ### Scrabble
 
 1. You get 7 letter tiles. The small number is that letter’s points.
@@ -68,16 +60,6 @@ Each game’s start menu shows a full **How to play** list in simple English. Th
 4. Using all 7 tiles in one word gives 50 bonus points.
 5. Used tiles leave; new ones come from the bag.
 6. Reach the target score to win (Easy 30 / Medium 55 / Hard 85).
-
-### Guess
-
-1. There is a secret word you cannot see yet.
-2. Type a guess of the right length, then press Enter.
-3. Green = letter in the right place.
-4. Amber = letter in the word, wrong place.
-5. Grey = letter not in the word.
-6. Find the word before you run out of tries.
-7. Phone: on-screen keys. Computer: your keyboard.
 
 ### Blanks
 

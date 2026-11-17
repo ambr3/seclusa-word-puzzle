@@ -38,79 +38,37 @@
   <div class="topbar-row">
     <button type="button" class="ghostbtn hidden" id="btn-back" aria-label="Back">Back</button>
     <h1 class="brand" id="brand">Seclusa Word Puzzle</h1>
-    <span class="topbar-spacer" aria-hidden="true"></span>
+    <button type="button" class="theme-btn" id="btn-theme" aria-haspopup="dialog" aria-controls="sheet-theme">Theme</button>
   </div>
 </header>
 
 <div id="hub-screen" class="screen">
-  <main class="wrap hub-wrap stationery-hub">
-    <section class="hub-hero" aria-label="Welcome">
-      <div class="hub-brand-row">
-        <span class="hub-brand-mark" aria-hidden="true">W</span>
-        <div class="hub-brand-copy">
-          <p class="hub-kicker">Seclusa</p>
-          <h2 class="hub-title">Word Puzzle</h2>
-          <p class="hub-subbrand">Word Puzzle Hub</p>
-        </div>
-      </div>
-      <p class="hub-lede">Five word games. One dictionary. Everything stays on this device — no clues, no accounts, no network after load.</p>
-      <p class="status" id="hub-status" role="status" aria-live="polite"></p>
-    </section>
+  <main class="wrap hub-wrap">
+    <header class="stage-mast">
+      <p class="stage-kicker">Seclusa</p>
+      <h2 class="stage-title">Word<br>Puzzle</h2>
+      <p class="stage-lede">Three games. One dictionary. Everything stays on this device.</p>
+    </header>
+    <p class="status" id="hub-status" role="status" aria-live="polite"></p>
+    <div class="stage-grid" id="mode-grid" role="navigation" aria-label="Games"></div>
 
-    <p class="hub-section-label">Choose a game</p>
-    <div class="mode-grid" id="mode-grid"></div>
+    <div class="hub-foot">
+      <button type="button" class="hub-foot-link" id="btn-instructions" aria-expanded="false" aria-controls="hub-instructions">Help</button>
+      <button type="button" class="hub-foot-link" id="btn-dict-toggle" aria-expanded="false" aria-controls="hub-dict">Dictionary</button>
+      <button type="button" class="hub-foot-link danger-link" id="btn-clear">Erase data</button>
+    </div>
 
-    <div class="hub-settings mt18 stationery-settings" id="hub-settings">
-      <p class="hub-settings-title">Settings</p>
-      <p class="muted hub-settings-lede">Applies to every game.</p>
+    <div class="hub-fold" id="hub-instructions" hidden></div>
 
-      <div class="settings-card">
-        <p class="theme-section-label">Theme</p>
-        <p class="muted settings-card-hint">Choose your app appearance.</p>
-        <div class="theme-mode-row theme-segment" role="group" aria-label="Colour mode" id="hub-theme-row">
-          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="system" aria-checked="false">System</button>
-          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="light" aria-checked="false">Light</button>
-          <button class="theme-chip" type="button" role="menuitemradio" data-theme-opt="dark" aria-checked="false">Dark</button>
-        </div>
-      </div>
-
-      <div class="settings-card">
-        <p class="theme-section-label">Dictionary</p>
-        <ul class="dict-stat-rows" aria-label="Dictionary size">
-          <li><span class="dict-stat-key">Common words</span><span class="dict-stat-val" id="dict-common">0</span></li>
-          <li><span class="dict-stat-key">Accepted words</span><span class="dict-stat-val" id="dict-all">0</span></li>
-          <li><span class="dict-stat-key">Stored</span><span class="dict-stat-val">On this device</span></li>
-        </ul>
-        <p class="muted settings-note" id="dict-disclaimer">
-          Words from
-          <a href="https://en.wikipedia.org/wiki/ENABLE_(word_list)" rel="noopener noreferrer">ENABLE1</a>
-          (public domain — not an open-source licence), lengths 2–12.
-          Offensive terms removed as far as practicable. Please report any that remain.
-        </p>
-        <p class="visually-hidden" id="dict-stats"></p>
-      </div>
-
-      <div class="settings-card settings-card-help">
-        <button type="button" class="settings-help-row" id="btn-instructions" aria-expanded="false" aria-controls="hub-instructions">
-          <span class="settings-help-mark" aria-hidden="true">?</span>
-          <span class="settings-help-copy">
-            <span class="settings-help-title">Help</span>
-            <span class="settings-help-sub">How to play every game</span>
-          </span>
-          <span class="settings-help-chev" aria-hidden="true">›</span>
-        </button>
-        <div class="how-box mt12" id="hub-instructions" hidden></div>
-        <p class="muted settings-note">Full docs: INSTRUCTIONS.md in this folder.</p>
-      </div>
-
-      <div class="settings-card settings-card-danger">
-        <p class="theme-section-label">Erase saved data</p>
-        <p class="muted settings-card-hint">Clear all saved progress, scores, and preferences.</p>
-        <div class="buttonrow">
-          <button type="button" class="btn stationery-erase wide" id="btn-clear">Erase all data</button>
-        </div>
-        <p class="muted settings-note danger-note">This action cannot be undone.</p>
-      </div>
+    <div class="hub-fold" id="hub-dict" hidden>
+      <p class="meta-line" id="dict-stats"></p>
+      <p class="muted settings-note" id="dict-disclaimer">
+        Words from
+        <a href="https://en.wikipedia.org/wiki/ENABLE_(word_list)" rel="noopener noreferrer">ENABLE1</a>
+        (public domain — not an open-source licence), lengths 2–12.
+        Offensive terms removed as far as practicable.
+      </p>
+      <p class="visually-hidden"><span id="dict-common">0</span> <span id="dict-all">0</span></p>
     </div>
 
     <footer class="site-foot">
@@ -118,14 +76,14 @@
         <a href="https://github.com/ambr3/seclusa-word-puzzle" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
         · Made with <span class="heart" role="img" aria-label="love">❤️</span>
         <span class="flag" role="img" aria-label="United Kingdom">🇬🇧</span>
-        · v0.4.0
+        · v0.4.1
       </p>
     </footer>
   </main>
 </div>
 
 <div id="play-screen" class="screen hidden">
-  <main class="wrap">
+  <main class="wrap play-wrap">
     <div class="play-toolbar">
       <p class="play-title" id="play-title"></p>
       <div class="buttonrow" id="play-actions"></div>
@@ -133,6 +91,19 @@
     <p class="status" id="play-status" role="status" aria-live="polite"></p>
     <div id="play-root"></div>
   </main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="sheet" id="sheet-theme" role="dialog" aria-modal="false" aria-label="Theme" aria-hidden="true" inert>
+  <div class="sheet-handle" aria-hidden="true"></div>
+  <h3>Theme</h3>
+  <p class="note">Colour mode</p>
+  <div class="theme-mode-row" role="group" aria-label="Colour mode">
+    <button type="button" class="theme-chip" data-theme-opt="system" role="menuitemradio" aria-checked="false">System</button>
+    <button type="button" class="theme-chip" data-theme-opt="light" role="menuitemradio" aria-checked="false">Light</button>
+    <button type="button" class="theme-chip" data-theme-opt="dark" role="menuitemradio" aria-checked="false">Dark</button>
+  </div>
+  <p class="note">Orange ruled lines stay on. Appearance follows System, Light, or Dark.</p>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

@@ -81,21 +81,17 @@ test("dictionary loads and builds puzzles", () => {
   assert.ok(Dict.sizes.common > 1000);
   assert.ok(Dict.sizes.all > Dict.sizes.common);
   assert.equal(Dict.isWord("about"), true);
-  assert.equal(Dict.scoreGuess("about", "about").join(","), "hit,hit,hit,hit,hit");
-  assert.equal(Dict.scoreGuess("abort", "about").filter((x) => x === "hit").length, 4);
-
-  const random = Dict.rng(42);
-  assert.ok(Dict.makeGuess(random, { difficulty: "medium" }));
-  assert.equal(Dict.makeGuess(Dict.rng(3), { difficulty: "easy" }).wordLen, 4);
-  assert.equal(Dict.makeGuess(Dict.rng(4), { difficulty: "hard" }).wordLen, 6);
   assert.ok(Dict.makeBlanks(Dict.rng(9), { difficulty: "easy" }));
-  assert.ok(Dict.makeLadder(Dict.rng(11), { difficulty: "medium" }));
+  for (let seed = 1; seed <= 40; seed++) {
+    const hard = Dict.makeBlanks(Dict.rng(seed), { difficulty: "hard" });
+    assert.ok(hard, "hard blanks seed " + seed);
+    assert.ok(hard.word.length >= 7);
+    assert.equal(hard.maxMisses, 4);
+  }
   const sb = Dict.makeScrabble(Dict.rng(13), { difficulty: "medium" });
   assert.ok(sb);
   assert.equal(sb.rack.length, 7);
   assert.equal(sb.target, 55);
   assert.equal(Dict.tileValue("q"), 10);
   assert.equal(Dict.tileValue("a"), 1);
-  const scored = Dict.scoreGuess("arose", "about");
-  assert.equal(scored.join(","), "hit,miss,hit,miss,miss");
 });

@@ -79,16 +79,20 @@
       root.innerHTML = "";
     }
 
+    var timerHiddenAt = 0;
+
     function stopTimer() {
       if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
       }
+      if (!document.hidden) timerHiddenAt = 0;
     }
 
     function armTimer() {
       if (submode === "zen" || submode === "challenge") return;
       stopTimer();
+      timerHiddenAt = 0;
       timerInterval = setInterval(function () {
         timeLeft--;
         paintHud();
@@ -101,8 +105,27 @@
 
     function onVisibility() {
       if (!playing) return;
-      if (document.hidden) stopTimer();
-      else armTimer();
+      if (submode === "zen" || submode === "challenge") return;
+      if (document.hidden) {
+        stopTimer();
+        timerHiddenAt = Date.now();
+        return;
+      }
+      if (timerHiddenAt) {
+        var elapsed = Math.floor((Date.now() - timerHiddenAt) / 1000);
+        timerHiddenAt = 0;
+        if (elapsed > 0) {
+          timeLeft -= elapsed;
+          paintHud();
+          if (timeLeft <= 0) {
+            timeLeft = 0;
+            paintHud();
+            endRound("timeout");
+            return;
+          }
+        }
+      }
+      armTimer();
     }
 
     function onKey(e) {
@@ -127,80 +150,46 @@
       var prog = data.puzzle.progress;
       var needed = PL.xpNeededFor(prog.level);
       root.innerHTML =
-        '<div class="pz-menu mode-page">' +
-          '<section class="mode-hero mode-hero-enter" aria-label="Puzzle">' +
-            '<div class="mode-hero-accent" aria-hidden="true"></div>' +
-            '<div class="mode-card-top">' +
-              '<span class="mode-mark mode-mark-lg" aria-hidden="true">P</span>' +
-              '<span class="mode-tag">Signature</span>' +
-            '</div>' +
-            '<div class="mode-card-body">' +
-              '<div class="mode-card-copy">' +
-                '<h2 class="mode-name">Puzzle</h2>' +
-                '<p class="mode-blurb">Drag letters on a grid. Classic, Rush, Zen, or Challenge.</p>' +
-              '</div>' +
-              '<span class="mode-preview mode-preview-puzzle" aria-hidden="true" id="pz-hero-preview"></span>' +
-            '</div>' +
-          '</section>' +
-          '<div class="panel mode-start"><div class="section how-play">' +
-            '<h2>How to play</h2>' +
-            '<ol class="how-steps">' +
-              '<li>You get a board full of letters.</li>' +
-              '<li>Drag your finger or mouse from letter to letter to spell a word. You can go sideways, up, down, or diagonal.</li>' +
-              '<li>You may use each letter only once in the same word.</li>' +
-              '<li>A word needs at least 2 letters.</li>' +
-              '<li>Some squares give bonus points: DL and TL make one letter worth more. DW and TW make the whole word worth more.</li>' +
-              '<li>Longer words and finding words in a row give extra points.</li>' +
-              '<li>Pick a mode below: Classic has a timer. Rush gives you more time when you find a word. Zen has no timer. Challenge stops after 15 words.</li>' +
-              '<li>Move the difficulty slider. Higher numbers mean a bigger, harder board.</li>' +
-            '</ol>' +
-          '</div></div>' +
-          '<div class="statstrip mt12">' +
-            '<div class="statcell"><span class="statkey">Difficulty</span><span class="statvalue" id="pz-diff"></span><span class="statsub" id="pz-diff-sub"></span></div>' +
-            '<div class="statcell"><span class="statkey">Profile</span><span class="statvalue" id="pz-lv"></span><span class="statsub" id="pz-xp"></span></div>' +
-            '<div class="statcell"><span class="statkey">Best word</span><span class="statvalue stat-word" id="pz-best"></span><span class="statsub" id="pz-best-pts"></span></div>' +
-          '</div>' +
-          '<div class="panel mt12 mode-start"><div class="section">' +
-            '<h2>Mode</h2>' +
-            '<div class="pz-modes" id="pz-modes"></div>' +
-          '</div><div class="section settings-block">' +
-            '<h2>Difficulty</h2>' +
+        '<div class="start-page pz-menu">' +
+          '<div class="start-side">' +
+            '<h2 class="start-title">Puzzle</h2>' +
+            '<p class="start-blurb muted">Drag letters on a grid. Classic, Rush, Zen, or Challenge.</p>' +
+            '<p class="start-section-label mt14">Difficulty <span class="muted" id="pz-diff-label"></span></p>' +
             '<div class="pz-diff-row">' +
               '<button type="button" class="btn" id="pz-diff-minus" aria-label="Lower difficulty">−</button>' +
               '<input type="range" id="pz-diff-slider" min="1" max="100" value="' + difficulty + '" aria-label="Difficulty">' +
               '<button type="button" class="btn" id="pz-diff-plus" aria-label="Raise difficulty">+</button>' +
             '</div>' +
-            '<p class="meta-line mt10">1–5 easy 4×4 · 6–10 mixed · 11–15 5×5 · 16–20 hard · 21–100 6×6</p>' +
-          '</div><div class="section">' +
-            '<button type="button" class="btn primary wide mode-play-btn" id="pz-play">Play</button>' +
-          '</div></div>' +
-          '<div class="panel mt12 mode-start"><div class="section">' +
-            '<h2>High scores</h2>' +
+            '<p class="meta-line mt10" id="pz-diff-sub"></p>' +
+            '<p class="meta-line">Lv ' + prog.level + ' · ' + prog.xp + ' / ' + needed + ' XP</p>' +
+            '<button type="button" class="btn primary wide mode-play-btn mt14" id="pz-play">Play</button>' +
+          '</div>' +
+          '<div class="start-main">' +
+            '<p class="start-section-label">Mode</p>' +
+            '<div class="pz-modes" id="pz-modes"></div>' +
+          '</div>' +
+          '<button type="button" class="fold-toggle mt14" id="pz-how-toggle" aria-expanded="false">' +
+            '<span>How to play</span><span class="fold-chev" aria-hidden="true">›</span>' +
+          '</button>' +
+          '<div class="fold-panel" id="pz-how" hidden>' +
+            '<ol class="how-steps">' +
+              '<li>Drag from letter to letter to spell a word (sideways, up, down, or diagonal).</li>' +
+              '<li>Each letter once per word. Minimum 2 letters.</li>' +
+              '<li>Bonus squares: DL/TL letter, DW/TW whole word.</li>' +
+              '<li>Classic timed · Rush adds time · Zen no timer · Challenge 15 words.</li>' +
+            '</ol>' +
+          '</div>' +
+          '<button type="button" class="fold-toggle mt12" id="pz-hs-toggle" aria-expanded="false">' +
+            '<span>High scores</span><span class="fold-chev" aria-hidden="true">›</span>' +
+          '</button>' +
+          '<div class="fold-panel" id="pz-hs-panel" hidden>' +
             '<div class="pz-hs-tabs" id="pz-hs-tabs"></div>' +
             '<ul class="pz-hs-list" id="pz-hs-list"></ul>' +
-          '</div></div>' +
+          '</div>' +
         '</div>';
 
-      var previewHost = root.querySelector("#pz-hero-preview");
-      if (previewHost) {
-        var cells = "W O R D P L A Y G A M E S U N T".split(" ");
-        var path = { 0: 1, 1: 1, 2: 1, 3: 1 };
-        cells.forEach(function (ch, i) {
-          var cell = document.createElement("span");
-          cell.className = "mp-cell" + (path[i] ? " on" : "");
-          cell.textContent = ch;
-          previewHost.appendChild(cell);
-        });
-      }
-
-      root.querySelector("#pz-diff").textContent = String(difficulty);
+      root.querySelector("#pz-diff-label").textContent = String(difficulty);
       root.querySelector("#pz-diff-sub").textContent = cfg.diff + " · " + cfg.size + "×" + cfg.size;
-      root.querySelector("#pz-lv").textContent = "Lv " + prog.level;
-      root.querySelector("#pz-xp").textContent = prog.xp + " / " + needed + " XP";
-      var bestSafe = safeWordLabel(data.puzzle.bestWord);
-      root.querySelector("#pz-best").textContent = bestSafe || "—";
-      root.querySelector("#pz-best-pts").textContent =
-        bestSafe && data.puzzle.bestWordPts ? ("+" + data.puzzle.bestWordPts) : "No words yet";
 
       var modesEl = root.querySelector("#pz-modes");
       Object.keys(PL.SUBMODES).forEach(function (id) {
@@ -231,6 +220,24 @@
         setDiff(parseInt(e.target.value, 10));
       });
       root.querySelector("#pz-play").addEventListener("click", startRound);
+
+      var howToggle = root.querySelector("#pz-how-toggle");
+      var howBox = root.querySelector("#pz-how");
+      howToggle.addEventListener("click", function () {
+        var open = howBox.hidden;
+        howBox.hidden = !open;
+        howToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        howToggle.classList.toggle("open", open);
+      });
+
+      var hsToggle = root.querySelector("#pz-hs-toggle");
+      var hsPanel = root.querySelector("#pz-hs-panel");
+      hsToggle.addEventListener("click", function () {
+        var open = hsPanel.hidden;
+        hsPanel.hidden = !open;
+        hsToggle.setAttribute("aria-expanded", open ? "true" : "false");
+        hsToggle.classList.toggle("open", open);
+      });
 
       var hsMode = submode;
       var tabs = root.querySelector("#pz-hs-tabs");
@@ -307,11 +314,13 @@
             '<button type="button" class="btn primary" id="pz-submit">Submit</button>' +
             '<button type="button" class="btn" id="pz-clear">Clear</button>' +
           '</div>' +
-          '<div class="pz-board">' +
-            '<svg class="pz-path" id="pz-path" aria-hidden="true"></svg>' +
-            '<div class="pz-grid" id="pz-grid"></div>' +
+          '<div class="pz-board-slot">' +
+            '<div class="pz-board">' +
+              '<svg class="pz-path" id="pz-path" aria-hidden="true"></svg>' +
+              '<div class="pz-grid" id="pz-grid"></div>' +
+            '</div>' +
           '</div>' +
-          '<div class="buttonrow mt12">' +
+          '<div class="buttonrow pz-quit-row">' +
             '<button type="button" class="btn hidden" id="pz-zen-end">End round</button>' +
             '<button type="button" class="btn danger" id="pz-quit">Quit</button>' +
           '</div>' +
@@ -663,6 +672,7 @@
     function endRound(reason) {
       if (!playing) return;
       playing = false;
+      timerHiddenAt = 0;
       stopTimer();
       lastEndReason = reason || "timeout";
       var wordCount = Object.keys(foundWords).length;

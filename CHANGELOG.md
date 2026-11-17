@@ -2,6 +2,19 @@
 
 All notable changes to **Seclusa Word Puzzle**.
 
+## 0.4.1 — 2026-11-17
+
+### Changed
+- Hub is a typographic stage with three posters (Puzzle, Scrabble, Blanks); Ladder and Guess removed.
+- Play and start menus fill the window; Puzzle board scales with a found-words side rail.
+- Blanks hub poster art uses W_R_D instead of C_A_T.
+
+### Fixed
+- Hard Blanks no longer fails when length 8 is chosen against the 4–7 common pool.
+- Classic/Rush countdown catches up after the tab was hidden (wall-clock).
+- Play root keeps `is-result` when remounting a finished round.
+- Playwright stress selectors updated for `.poster` hub and Theme sheet.
+
 ## 0.4.0 — 2026-11-15
 
 ### Changed
@@ -10,7 +23,7 @@ All notable changes to **Seclusa Word Puzzle**.
 
 ### Fixed
 - Help toggle no longer destroys the stationery Help button markup.
-- Erase button label stays “Erase all data” through arm/disarm.
+- Erase button label stays “Erase data” through arm/disarm.
 - Classic/Rush timeout no longer counts as a hub “cleared” win.
 - Featured Puzzle preview no longer hidden by the narrow-card container query.
 - Mode cards no longer force cream backgrounds in dark mode.

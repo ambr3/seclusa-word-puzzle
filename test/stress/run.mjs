@@ -55,7 +55,7 @@ async function main() {
   const consoleErrors = [];
   const pageErrors = [];
   const failedRequests = [];
-  const modes = ["Puzzle", "Ladder", "Scrabble", "Guess", "Blanks"];
+  const modes = ["Puzzle", "Scrabble", "Blanks"];
 
   const { server, port } = await startServer();
   const base = `http://127.0.0.1:${port}/`;
@@ -71,12 +71,12 @@ async function main() {
   });
 
   await page.goto(base, { waitUntil: "domcontentloaded" });
-  await page.waitForSelector(".mode-card");
+  await page.waitForSelector(".poster");
 
   let iterations = 0;
   for (let i = 0; i < 21; i++) {
     const name = modes[i % modes.length];
-    await page.getByRole("button", { name }).click();
+    await page.getByRole("button", { name: new RegExp("^" + name + "\\b") }).click();
     if (name === "Puzzle") {
       await page.locator("#pz-play").click({ timeout: 5000 });
       await page.waitForTimeout(80);
@@ -90,17 +90,18 @@ async function main() {
       await page.waitForTimeout(40);
       await page.locator("#btn-back").click();
     }
-    await page.waitForSelector(".mode-card");
+    await page.waitForSelector(".poster");
     iterations++;
   }
 
+  await page.locator("#btn-theme").click();
   await page.getByRole("menuitemradio", { name: "Dark" }).click();
   await page.getByRole("menuitemradio", { name: "Light" }).click();
   await page.getByRole("menuitemradio", { name: "System" }).click();
 
   // Offline-ish: reload after SW attempt
   await page.reload({ waitUntil: "domcontentloaded" });
-  await page.waitForSelector(".mode-card");
+  await page.waitForSelector(".poster");
 
   const footer = await page.locator(".made-with").textContent();
   await browser.close();
